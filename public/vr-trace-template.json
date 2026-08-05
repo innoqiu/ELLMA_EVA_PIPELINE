@@ -1,0 +1,159 @@
+{
+  "schema_version": "ellma-vr-trace-1.0",
+  "sample_interval_ms": 5000,
+  "coordinate_system": {
+    "units": "metres",
+    "handedness": "right-handed",
+    "axes": {
+      "x": "right",
+      "y": "up",
+      "z": "forward"
+    },
+    "origin": "VR scene origin"
+  },
+  "session": {
+    "session_id": "example-session-001",
+    "learner_id": "anonymous-learner",
+    "started_at_utc": "2026-08-05T09:00:00Z"
+  },
+  "scene_objects": [
+    {
+      "id": "audience-centre",
+      "type": "audience",
+      "position": [0.0, 1.45, 3.0]
+    },
+    {
+      "id": "slide-screen",
+      "type": "screen",
+      "position": [2.4, 1.7, 2.2]
+    }
+  ],
+  "records": [
+    {
+      "timestamp_ms": 0,
+      "gaze": {
+        "source": "eye_tracking",
+        "origin": [0.0, 1.65, 0.0],
+        "direction": [0.0, -0.05, 0.99],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 0.96
+      },
+      "headset": {
+        "position": [0.0, 1.65, 0.0],
+        "rotation_xyzw": [0.0, 0.0, 0.0, 1.0]
+      },
+      "controllers": {
+        "left": {
+          "position": [-0.28, 1.15, 0.32],
+          "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+          "tracked": true
+        },
+        "right": {
+          "position": [0.3, 1.18, 0.35],
+          "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-centre",
+          "position": [0.0, 1.45, 3.0]
+        },
+        {
+          "id": "audience-left",
+          "position": [-1.2, 1.45, 2.8]
+        },
+        {
+          "id": "audience-right",
+          "position": [1.2, 1.45, 2.8]
+        }
+      ],
+      "events": ["presentation_started"]
+    },
+    {
+      "timestamp_ms": 5000,
+      "gaze": {
+        "source": "eye_tracking",
+        "origin": [0.02, 1.65, 0.03],
+        "direction": [0.61, 0.02, 0.79],
+        "target_id": "slide-screen",
+        "target_type": "screen",
+        "confidence": 0.93
+      },
+      "headset": {
+        "position": [0.02, 1.65, 0.03],
+        "rotation_xyzw": [0.0, 0.31, 0.0, 0.95]
+      },
+      "controllers": {
+        "left": {
+          "position": [-0.25, 1.17, 0.31],
+          "rotation_xyzw": [0.0, 0.02, 0.0, 1.0],
+          "tracked": true
+        },
+        "right": {
+          "position": [0.56, 1.42, 0.48],
+          "rotation_xyzw": [0.0, 0.42, 0.0, 0.91],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-centre",
+          "position": [0.0, 1.45, 3.0]
+        },
+        {
+          "id": "audience-left",
+          "position": [-1.2, 1.45, 2.8]
+        },
+        {
+          "id": "audience-right",
+          "position": [1.2, 1.45, 2.8]
+        }
+      ],
+      "events": ["pointed_at_slide"]
+    },
+    {
+      "timestamp_ms": 10000,
+      "gaze": {
+        "source": "eye_tracking",
+        "origin": [0.01, 1.65, 0.04],
+        "direction": [-0.25, -0.04, 0.97],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 0.95
+      },
+      "headset": {
+        "position": [0.01, 1.65, 0.04],
+        "rotation_xyzw": [0.0, -0.13, 0.0, 0.99]
+      },
+      "controllers": {
+        "left": {
+          "position": [-0.46, 1.36, 0.42],
+          "rotation_xyzw": [0.0, -0.15, 0.0, 0.99],
+          "tracked": true
+        },
+        "right": {
+          "position": [0.47, 1.35, 0.43],
+          "rotation_xyzw": [0.0, 0.15, 0.0, 0.99],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-centre",
+          "position": [0.0, 1.45, 3.0]
+        },
+        {
+          "id": "audience-left",
+          "position": [-1.2, 1.45, 2.8]
+        },
+        {
+          "id": "audience-right",
+          "position": [1.2, 1.45, 2.8]
+        }
+      ],
+      "events": ["open_hand_gesture"]
+    }
+  ]
+}
