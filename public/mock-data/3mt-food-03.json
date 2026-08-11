@@ -1,0 +1,17 @@
+{
+  "schema_version": "ellma-3mt-mock-1.0",
+  "id": "3mt-food-03",
+  "label": "Dataset 03",
+  "title": "A Second Life for Lunch",
+  "learner": "Mock learner C",
+  "topic": "Reducing university food waste",
+  "audience": "General public",
+  "level": "B2–C1",
+  "taskBrief": "Explain the intervention and its evidence, avoid overstating what one university trial proves, and make the research contribution accessible to a non-specialist audience.",
+  "designedSignals": [
+    "Repeated ‘This is’ frame",
+    "Overgeneralised final claim",
+    "Accessible contribution statement"
+  ],
+  "transcript": "Every day our university throws away enough edible food to serve four hundred lunches. This is a waste problem, but this is also a communication problem. Students often do not know what food remains available or when dining halls will close. This is why my research tested a real-time surplus notification system. For eight weeks, dining staff posted the type and amount of food available before closing. Students received a message and could reserve a low-cost meal. This is simple, this is fast, and this is easy to scale. The trial reduced edible waste by thirty-two percent and helped staff record which meals were regularly overproduced. Universities must adopt this system because it will solve campus food waste. The important contribution is not only the app. It is the link between kitchen data and student decisions. A second life for lunch begins when the right information reaches the right person before food becomes waste."
+}

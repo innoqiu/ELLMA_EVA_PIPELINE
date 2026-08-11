@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   Activity,
   AudioLines,
+  Beaker,
   Blocks,
   BookOpen,
   Bot,
@@ -19,6 +20,7 @@ import {
   Eye,
   EyeOff,
   FileAudio,
+  FileDown,
   FileJson,
   FileOutput,
   FileText,
@@ -27,6 +29,7 @@ import {
   GitMerge,
   Hand,
   HelpCircle,
+  Headphones,
   KeyRound,
   ListChecks,
   LoaderCircle,
@@ -39,6 +42,7 @@ import {
   RefreshCw,
   Server,
   Settings2,
+  SlidersHorizontal,
   ScanEye,
   ShieldCheck,
   Sparkles,
@@ -234,6 +238,73 @@ const DEFAULT_SELECTED_FOCUS = Object.fromEntries(ATTENTION_AREAS.map((area) => 
 const DEFAULT_CUSTOM_FOCUS = Object.fromEntries(ATTENTION_AREAS.map((area) => [area.id, []]));
 const DEFAULT_ATTENTION_WEIGHTS = Object.fromEntries(ATTENTION_AREAS.map((area) => [area.id, 3]));
 const HISTORY_LIMIT = 50;
+const EXPERIMENT_TEXT_AREAS = ['grammar', 'lexical', 'pragmatic', 'discourse'];
+
+const DEFAULT_EXPERIMENT_DATASETS = [
+  {
+    id: '3mt-heat-01',
+    label: 'Dataset 01',
+    title: 'Heat Has a Postcode',
+    learner: 'Mock learner A',
+    topic: 'Urban heat inequality',
+    audience: 'General public',
+    level: 'B2–C1',
+    taskBrief: 'Explain how street-level temperature mapping reveals unequal heat exposure, why the result matters, and what decision the research could inform.',
+    transcript: 'Good afternoon. I think heat is usually described as a city-wide problem. I think this hides an important fact: heat changes from one street to the next. My research combines satellite images with temperature sensors carried by local volunteers. We mapped twelve neighbourhoods during three summer heatwaves. The results show that two streets only five hundred metres apart can differ by six degrees. I think people should understand that this is not simply uncomfortable weather. Older residents and outdoor workers face greater health risks in the hottest streets. I think city planners should use our evidence to place trees, shade and cooling centres where exposure is highest. The map makes invisible inequality visible. Heat has a postcode, and local climate adaptation should begin with the people living in the hottest one.',
+    designedSignals: ['Repeated “I think” frame', 'Strong recommendation language', 'Clear result and closing'],
+    downloadUrl: '/mock-data/3mt-heat-01.json',
+    transcriptUrl: '/mock-data/3mt-heat-01.txt',
+    importedFile: null,
+    audio: null,
+  },
+  {
+    id: '3mt-ocean-02',
+    label: 'Dataset 02',
+    title: 'The Plastic We Cannot See',
+    learner: 'Mock learner B',
+    topic: 'Microplastic transport in coastal water',
+    audience: 'General public',
+    level: 'B2–C1',
+    taskBrief: 'Introduce the research problem, explain the sampling method without excessive technical detail, state the contribution, and end with a memorable public-facing message.',
+    transcript: 'Imagine standing on a clean beach while millions of plastic particles move through the water in front of you. My research follows these particles after storms. Working with three coastal communities, I collect water at river mouths, shallow bays and offshore sites, and because each sample is filtered, chemically identified and compared with rainfall, tide direction, drainage flow and the shape of the coastline, the study can show how several environmental forces combine to move pollution through a connected coastal system that cannot be understood from a single sampling point. We found that the largest pulse arrives within twenty-four hours of heavy rain. The particles then remain trapped in sheltered bays for several days. Current monitoring often samples too late and in the wrong place. Our mobile sampling design captures the short window when pollution is most concentrated. Cleaner-looking water is not necessarily cleaner water. To protect the coast, we need to measure plastic when it moves, not only where it finally settles.',
+    designedSignals: ['High clause load', 'Method-heavy middle section', 'Contribution stated late'],
+    downloadUrl: '/mock-data/3mt-ocean-02.json',
+    transcriptUrl: '/mock-data/3mt-ocean-02.txt',
+    importedFile: null,
+    audio: null,
+  },
+  {
+    id: '3mt-food-03',
+    label: 'Dataset 03',
+    title: 'A Second Life for Lunch',
+    learner: 'Mock learner C',
+    topic: 'Reducing university food waste',
+    audience: 'General public',
+    level: 'B2–C1',
+    taskBrief: 'Explain the intervention and its evidence, avoid overstating what one university trial proves, and make the research contribution accessible to a non-specialist audience.',
+    transcript: 'Every day our university throws away enough edible food to serve four hundred lunches. This is a waste problem, but this is also a communication problem. Students often do not know what food remains available or when dining halls will close. This is why my research tested a real-time surplus notification system. For eight weeks, dining staff posted the type and amount of food available before closing. Students received a message and could reserve a low-cost meal. This is simple, this is fast, and this is easy to scale. The trial reduced edible waste by thirty-two percent and helped staff record which meals were regularly overproduced. Universities must adopt this system because it will solve campus food waste. The important contribution is not only the app. It is the link between kitchen data and student decisions. A second life for lunch begins when the right information reaches the right person before food becomes waste.',
+    designedSignals: ['Repeated “This is” frame', 'Overgeneralised final claim', 'Accessible contribution statement'],
+    downloadUrl: '/mock-data/3mt-food-03.json',
+    transcriptUrl: '/mock-data/3mt-food-03.txt',
+    importedFile: null,
+    audio: null,
+  },
+];
+
+const DEFAULT_EXPERIMENT_SETUP = {
+  name: '3MT text-only feedback comparison',
+  modelRoute: 'configured-text',
+  selectedDatasetIds: DEFAULT_EXPERIMENT_DATASETS.map((dataset) => dataset.id),
+  selectedAreaIds: [...EXPERIMENT_TEXT_AREAS],
+  attentionWeights: { grammar: 3, lexical: 4, pragmatic: 4, discourse: 5 },
+};
+const DEFAULT_EXPERIMENT_COMPLETED_AT = '2026-08-11T08:00:00.000Z';
+const DEFAULT_EXPERIMENT = {
+  ...DEFAULT_EXPERIMENT_SETUP,
+  datasets: DEFAULT_EXPERIMENT_DATASETS,
+  feedbackByDataset: createBundledExperimentFeedback(DEFAULT_EXPERIMENT_DATASETS, DEFAULT_EXPERIMENT_SETUP),
+  lastRunAt: DEFAULT_EXPERIMENT_COMPLETED_AT,
+};
 
 function getFocusItems(state, area) {
   const builtIn = area.focus.map((title) => ({
@@ -285,7 +356,27 @@ const DEFAULT_STATE = {
   readiness: null,
   results: null,
   history: [],
+  experiment: DEFAULT_EXPERIMENT,
 };
+
+function loadExperiment(storedExperiment) {
+  if (!storedExperiment) return DEFAULT_EXPERIMENT;
+  const savedDatasets = new Map((storedExperiment.datasets || []).map((dataset) => [dataset.id, dataset]));
+  const datasets = DEFAULT_EXPERIMENT_DATASETS.map((dataset) => ({
+    ...dataset,
+    ...(savedDatasets.get(dataset.id) || {}),
+    audio: savedDatasets.get(dataset.id)?.audio || null,
+  }));
+  return {
+    ...DEFAULT_EXPERIMENT,
+    ...storedExperiment,
+    datasets,
+    selectedDatasetIds: Array.isArray(storedExperiment.selectedDatasetIds) ? storedExperiment.selectedDatasetIds : DEFAULT_EXPERIMENT.selectedDatasetIds,
+    selectedAreaIds: Array.isArray(storedExperiment.selectedAreaIds) ? storedExperiment.selectedAreaIds.filter((id) => EXPERIMENT_TEXT_AREAS.includes(id)) : DEFAULT_EXPERIMENT.selectedAreaIds,
+    attentionWeights: { ...DEFAULT_EXPERIMENT.attentionWeights, ...storedExperiment.attentionWeights },
+    feedbackByDataset: { ...DEFAULT_EXPERIMENT.feedbackByDataset, ...(storedExperiment.feedbackByDataset || {}) },
+  };
+}
 
 function loadState() {
   try {
@@ -323,6 +414,7 @@ function loadState() {
       customFocus,
       attentionWeights: { ...DEFAULT_ATTENTION_WEIGHTS, ...stored.attentionWeights },
       history: Array.isArray(stored.history) ? stored.history : [],
+      experiment: loadExperiment(stored.experiment),
       config,
     };
   } catch {
@@ -400,6 +492,7 @@ function App() {
     { id: 'input', label: 'Input', icon: UploadCloud },
     { id: 'attention', label: 'Attention Areas', icon: ListChecks },
     { id: 'feedback', label: 'Feedback', icon: ClipboardCheck },
+    { id: 'experiments', label: '3MT Experiments', icon: Beaker },
     { id: 'history', label: 'History', icon: Clock3 },
     { id: 'pipeline', label: 'Pipeline', icon: Workflow },
     { id: 'config', label: 'Config', icon: Settings2 },
@@ -438,6 +531,7 @@ function App() {
           {page === 'input' && <InputPage state={state} setState={setState} notify={notify} onNext={() => setPage('attention')} />}
           {page === 'attention' && <AttentionPage state={state} setState={setState} notify={notify} />}
           {page === 'feedback' && <FeedbackPage state={state} running={running} runStage={runStage} runEvaluation={runEvaluation} setPage={setPage} />}
+          {page === 'experiments' && <ExperimentPage state={state} setState={setState} notify={notify} />}
           {page === 'history' && <HistoryPage history={state.history} />}
           {page === 'pipeline' && <PipelinePage />}
           {page === 'config' && <ConfigPage state={state} setState={setState} notify={notify} />}
@@ -453,6 +547,7 @@ function Topbar({ state, setState, page, runEvaluation, running }) {
     input: ['Session input', 'Add the evidence available for this performance.'],
     attention: ['Attention areas', 'Choose what the evaluation should inspect.'],
     feedback: ['Evaluation feedback', 'Prioritized, evidence-linked coaching actions.'],
+    experiments: ['3MT experiment datasets', 'Edit, configure and compare three text-only simulated evaluations.'],
     history: ['Run history', 'Inspect each attention agent output and the integrated decision.'],
     pipeline: ['How the system works', 'From synchronized evidence to two forms of actionable feedback.'],
     config: ['Model configuration', 'Route text and multimodal evidence to separate model endpoints.'],
@@ -463,7 +558,9 @@ function Topbar({ state, setState, page, runEvaluation, running }) {
         <h1>{titles[page][0]}</h1>
         <p>{titles[page][1]}</p>
       </div>
-      <div className="run-controls">
+      {page === 'experiments' ? (
+        <div className="experiment-topbar-mode"><Beaker size={16} /><span>Text-only experiment workspace</span></div>
+      ) : <div className="run-controls">
         <label className="slot-select">
           <span>Run slot</span>
           <select value={state.session.slot} onChange={(event) => setState((current) => ({ ...current, session: { ...current.session, slot: event.target.value } }))}>
@@ -477,7 +574,7 @@ function Topbar({ state, setState, page, runEvaluation, running }) {
           {running ? <LoaderCircle className="spin" size={17} /> : <Play size={16} fill="currentColor" />}
           {running ? 'Running' : 'Run'}
         </button>
-      </div>
+      </div>}
     </header>
   );
 }
@@ -994,6 +1091,284 @@ function FeedbackPage({ state, running, runStage, runEvaluation, setPage }) {
   );
 }
 
+function ExperimentPage({ state, setState, notify }) {
+  const [configOpen, setConfigOpen] = useState(false);
+  const [runningIds, setRunningIds] = useState([]);
+  const experiment = state.experiment;
+  const textAreas = ATTENTION_AREAS.filter((area) => EXPERIMENT_TEXT_AREAS.includes(area.id));
+  const selectedCount = experiment.selectedDatasetIds.length;
+  const configuredRoute = experiment.modelRoute === 'configured-text';
+  const routeLabel = configuredRoute
+    ? `${state.config.text.provider === 'openai' ? 'API' : 'Local Mock'} · ${state.config.text.model}`
+    : 'Forced Local Mock';
+
+  const updateExperiment = (patchValue) => setState((current) => ({
+    ...current,
+    experiment: { ...current.experiment, ...patchValue },
+  }));
+
+  const updateDataset = (datasetId, field, value) => setState((current) => ({
+    ...current,
+    experiment: {
+      ...current.experiment,
+      datasets: current.experiment.datasets.map((dataset) => (dataset.id === datasetId ? { ...dataset, [field]: value } : dataset)),
+    },
+  }));
+
+  const toggleDataset = (datasetId) => {
+    const selected = new Set(experiment.selectedDatasetIds);
+    if (selected.has(datasetId)) selected.delete(datasetId); else selected.add(datasetId);
+    updateExperiment({ selectedDatasetIds: [...selected] });
+  };
+
+  const toggleArea = (areaId) => {
+    const selected = new Set(experiment.selectedAreaIds);
+    if (selected.has(areaId)) selected.delete(areaId); else selected.add(areaId);
+    updateExperiment({ selectedAreaIds: [...selected] });
+  };
+
+  const updateExperimentWeight = (areaId, value) => updateExperiment({
+    attentionWeights: { ...experiment.attentionWeights, [areaId]: Number(value) },
+  });
+
+  const resetDataset = (datasetId) => {
+    const original = DEFAULT_EXPERIMENT_DATASETS.find((dataset) => dataset.id === datasetId);
+    if (!original) return;
+    setState((current) => ({
+      ...current,
+      experiment: {
+        ...current.experiment,
+        datasets: current.experiment.datasets.map((dataset) => (dataset.id === datasetId ? { ...original } : dataset)),
+      },
+    }));
+    notify(`${original.label} restored to the supplied mock data.`, 'info');
+  };
+
+  const importDataset = async (datasetId, file) => {
+    if (!file) return;
+    try {
+      const text = await file.text();
+      if (file.name.toLowerCase().endsWith('.json')) {
+        const imported = JSON.parse(text);
+        if (!imported.transcript || typeof imported.transcript !== 'string') throw new Error('JSON must contain a transcript string.');
+        const allowed = ['title', 'learner', 'topic', 'audience', 'level', 'taskBrief', 'transcript', 'designedSignals'];
+        setState((current) => ({
+          ...current,
+          experiment: {
+            ...current.experiment,
+            datasets: current.experiment.datasets.map((dataset) => {
+              if (dataset.id !== datasetId) return dataset;
+              const fields = Object.fromEntries(allowed.filter((key) => imported[key] !== undefined).map((key) => [key, imported[key]]));
+              return { ...dataset, ...fields, importedFile: { name: file.name, size: file.size, type: file.type || 'application/json' } };
+            }),
+          },
+        }));
+      } else {
+        updateDataset(datasetId, 'transcript', text);
+        updateDataset(datasetId, 'importedFile', { name: file.name, size: file.size, type: file.type || 'text/plain' });
+      }
+      notify(`${file.name} imported into the selected mock dataset.`, 'success');
+    } catch (error) {
+      notify(`Dataset import failed: ${error.message}`, 'error');
+    }
+  };
+
+  const attachAudio = (datasetId, file) => {
+    if (!file) return;
+    updateDataset(datasetId, 'audio', { name: file.name, size: file.size, type: file.type || 'audio/*', updatedAt: Date.now() });
+    notify(`${file.name} attached for a future real-audio test; it will not be analysed in this experiment.`, 'info');
+  };
+
+  const runDatasets = async (datasetIds) => {
+    const ids = datasetIds.filter((id) => experiment.selectedDatasetIds.includes(id));
+    if (!ids.length) {
+      notify('Select at least one dataset before running the experiment.', 'warning');
+      return;
+    }
+    if (!experiment.selectedAreaIds.length) {
+      notify('Enable at least one text attention agent in Experiment configuration.', 'warning');
+      setConfigOpen(true);
+      return;
+    }
+    setRunningIds(ids);
+    for (const datasetId of ids) {
+      const dataset = experiment.datasets.find((item) => item.id === datasetId);
+      if (!dataset?.transcript.trim()) continue;
+      const evaluationState = createExperimentEvaluationState(state, experiment, dataset);
+      const readiness = calculateReadiness(evaluationState);
+      let results;
+      let modelNote;
+      try {
+        const useRemote = experiment.modelRoute === 'configured-text'
+          && state.config.text.provider === 'openai'
+          && state.config.text.baseUrl.startsWith('http');
+        if (useRemote) {
+          results = await runRemoteEvaluation(evaluationState, readiness);
+          modelNote = `Text-only multi-agent evaluation with ${state.config.text.model}. Audio and multimodal routes were excluded.`;
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 240));
+          results = buildLocalResults(evaluationState, readiness);
+          modelNote = 'Text-only deterministic mock evaluation. Audio and multimodal routes were excluded.';
+        }
+      } catch (error) {
+        results = buildLocalResults(evaluationState, readiness);
+        modelNote = `Configured text model was unavailable; local text-only evaluator used (${error.message}).`;
+      }
+      const completedAt = new Date().toISOString();
+      const feedback = {
+        ...results,
+        completedAt,
+        modelNote,
+        datasetSnapshot: { ...dataset, audio: dataset.audio ? { ...dataset.audio } : null },
+        experimentConfig: {
+          name: experiment.name,
+          modelRoute: experiment.modelRoute,
+          selectedAreaIds: [...experiment.selectedAreaIds],
+          attentionWeights: { ...experiment.attentionWeights },
+          audioExcluded: true,
+        },
+      };
+      setState((current) => ({
+        ...current,
+        experiment: {
+          ...current.experiment,
+          feedbackByDataset: { ...current.experiment.feedbackByDataset, [datasetId]: feedback },
+          lastRunAt: completedAt,
+        },
+      }));
+      setRunningIds((current) => current.filter((id) => id !== datasetId));
+    }
+    setRunningIds([]);
+    notify('Selected 3MT datasets now have separate text-only feedback records.', 'success');
+  };
+
+  return (
+    <div className="experiment-page">
+      <section className="experiment-hero">
+        <div>
+          <span className="eyebrow">Controlled mock-data study</span>
+          <h2>{experiment.name}</h2>
+          <p>Three editable 3MT cases · text agents only · real audio upload reserved for later validation.</p>
+        </div>
+        <div className="experiment-hero-actions">
+          <div className="experiment-route-chip"><FileText size={15} /><span><small>Evaluation route</small><strong>{routeLabel}</strong></span></div>
+          <button className="secondary-button" onClick={() => setConfigOpen((open) => !open)}><SlidersHorizontal size={16} /> Configure experiment</button>
+          <button className="primary-button" onClick={() => runDatasets(experiment.selectedDatasetIds)} disabled={runningIds.length > 0}><Play size={16} /> {runningIds.length ? `Running ${runningIds.length}` : `Run ${selectedCount} datasets`}</button>
+        </div>
+      </section>
+
+      {configOpen && (
+        <section className="experiment-config-panel">
+          <div className="experiment-config-head"><div><span className="eyebrow">Experiment configuration</span><h3>Text-only comparison setup</h3></div><button className="text-button" onClick={() => setConfigOpen(false)}><X size={15} /> Close</button></div>
+          <div className="experiment-config-grid">
+            <FormField label="Experiment name"><input value={experiment.name} onChange={(event) => updateExperiment({ name: event.target.value })} /></FormField>
+            <FormField label="Model route" hint="Multimodal configuration remains available on the Config page.">
+              <select value={experiment.modelRoute} onChange={(event) => updateExperiment({ modelRoute: event.target.value })}>
+                <option value="configured-text">Use configured text model</option>
+                <option value="local-mock">Force Local Mock</option>
+              </select>
+            </FormField>
+          </div>
+          <div className="experiment-agent-config">
+            <div><strong>Enabled text attention agents</strong><span>Only these four transcript-based routes are available in this experiment.</span></div>
+            <div className="experiment-agent-grid">
+              {textAreas.map((area) => {
+                const enabled = experiment.selectedAreaIds.includes(area.id);
+                return (
+                  <article key={area.id} className={enabled ? 'enabled' : ''}>
+                    <button type="button" className={`switch ${enabled ? 'on' : ''}`} onClick={() => toggleArea(area.id)} role="switch" aria-checked={enabled} aria-label={`${enabled ? 'Disable' : 'Enable'} experiment ${area.name}`}><span /></button>
+                    <div><small>{area.code}</small><strong>{area.name}</strong></div>
+                    <label><span>Weight</span><input type="range" min="1" max="5" value={experiment.attentionWeights[area.id]} onChange={(event) => updateExperimentWeight(area.id, event.target.value)} disabled={!enabled} /><b>{experiment.attentionWeights[area.id]}/5</b></label>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+          <div className="text-only-rule"><ShieldCheck size={17} /><div><strong>Experiment invariant: no speech or multimodal measurement</strong><span>Uploaded recordings are retained only as dataset attachments. Fluency, pronunciation, prosody, gaze and gesture agents do not run.</span></div></div>
+        </section>
+      )}
+
+      <section className="experiment-dataset-list">
+        {experiment.datasets.map((dataset, index) => {
+          const selected = experiment.selectedDatasetIds.includes(dataset.id);
+          const feedback = experiment.feedbackByDataset[dataset.id];
+          const isRunning = runningIds.includes(dataset.id);
+          return (
+            <article className={`experiment-dataset ${selected ? 'selected' : ''}`} key={dataset.id}>
+              <header className="dataset-head">
+                <div className="dataset-identity"><span>{String(index + 1).padStart(2, '0')}</span><div><small>{dataset.label}</small><h3>{dataset.title}</h3><p>{dataset.topic}</p></div></div>
+                <div className="dataset-head-actions">
+                  <label className="dataset-select"><input type="checkbox" checked={selected} onChange={() => toggleDataset(dataset.id)} /><span>Include in experiment</span></label>
+                  <button className="text-button" onClick={() => resetDataset(dataset.id)}><RefreshCw size={14} /> Reset data</button>
+                  <button className="primary-button compact-button" onClick={() => runDatasets([dataset.id])} disabled={!selected || runningIds.length > 0}>{isRunning ? <LoaderCircle className="spin" size={15} /> : <Play size={14} />}{isRunning ? 'Running' : 'Run dataset'}</button>
+                </div>
+              </header>
+
+              <div className="dataset-edit-grid">
+                <div className="dataset-fields">
+                  <div className="dataset-field-row">
+                    <FormField label="Presentation title"><input value={dataset.title} onChange={(event) => updateDataset(dataset.id, 'title', event.target.value)} /></FormField>
+                    <FormField label="Learner ID"><input value={dataset.learner} onChange={(event) => updateDataset(dataset.id, 'learner', event.target.value)} /></FormField>
+                  </div>
+                  <div className="dataset-field-row three">
+                    <FormField label="Research topic"><input value={dataset.topic} onChange={(event) => updateDataset(dataset.id, 'topic', event.target.value)} /></FormField>
+                    <FormField label="Audience"><input value={dataset.audience} onChange={(event) => updateDataset(dataset.id, 'audience', event.target.value)} /></FormField>
+                    <FormField label="CEFR target"><input value={dataset.level} onChange={(event) => updateDataset(dataset.id, 'level', event.target.value)} /></FormField>
+                  </div>
+                  <FormField label="3MT task brief"><textarea value={dataset.taskBrief} onChange={(event) => updateDataset(dataset.id, 'taskBrief', event.target.value)} /></FormField>
+                  <FormField label="Simulated transcript" hint={`${countWords(dataset.transcript)} words · editable before every run`}><textarea className="dataset-transcript" value={dataset.transcript} onChange={(event) => updateDataset(dataset.id, 'transcript', event.target.value)} /></FormField>
+                </div>
+
+                <aside className="dataset-files-panel">
+                  <div><span className="eyebrow">Test files</span><h4>Download or replace inputs</h4><p>The supplied files reproduce this dataset outside the interface.</p></div>
+                  <a className="secondary-button full-width" href={dataset.downloadUrl} download><FileDown size={15} /> Download dataset JSON</a>
+                  <a className="secondary-button full-width" href={dataset.transcriptUrl} download><FileText size={15} /> Download transcript TXT</a>
+                  <label className="secondary-button full-width upload-label"><UploadCloud size={15} /> Upload JSON or transcript<input type="file" accept=".json,.txt,text/plain,application/json" onChange={(event) => importDataset(dataset.id, event.target.files?.[0])} hidden /></label>
+                  {dataset.importedFile && <div className="dataset-file-status"><CheckCircle2 size={14} /><span><strong>{dataset.importedFile.name}</strong><small>{formatBytes(dataset.importedFile.size)} imported</small></span></div>}
+                  <div className="future-audio-slot">
+                    <Headphones size={19} />
+                    <div><strong>Real recording · future test</strong><span>Upload is available, but audio is excluded from this experiment.</span></div>
+                    <label><UploadCloud size={14} /> {dataset.audio ? 'Replace' : 'Upload audio'}<input type="file" accept="audio/*" onChange={(event) => attachAudio(dataset.id, event.target.files?.[0])} hidden /></label>
+                  </div>
+                  {dataset.audio && <div className="dataset-file-status audio"><FileAudio size={14} /><span><strong>{dataset.audio.name}</strong><small>{formatBytes(dataset.audio.size)} · not analysed</small></span><button onClick={() => updateDataset(dataset.id, 'audio', null)} aria-label={`Remove ${dataset.audio.name}`}><X size={14} /></button></div>}
+                  <div className="designed-signals"><span>Designed test signals</span>{dataset.designedSignals.map((signal) => <small key={signal}>{signal}</small>)}</div>
+                </aside>
+              </div>
+
+              <ExperimentFeedback dataset={dataset} feedback={feedback} />
+            </article>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function ExperimentFeedback({ dataset, feedback }) {
+  if (!feedback) {
+    return <section className="experiment-feedback empty"><ClipboardCheck size={21} /><div><strong>No feedback run saved for {dataset.label}</strong><span>Edit the data or configuration, then run this dataset. Its result will remain here for review.</span></div></section>;
+  }
+  return (
+    <section className="experiment-feedback">
+      <header><div><span className="eyebrow">Saved dataset feedback</span><h4>{dataset.label} · integrated text evaluation</h4><p>{new Date(feedback.completedAt).toLocaleString()} · {feedback.modelNote}</p></div><div><span>{feedback.agentOutputs?.length || 0} agents</span><span>{feedback.findings?.length || 0} retained</span><span>{feedback.overallConfidence} confidence</span></div></header>
+      <div className="experiment-feedback-grid">
+        <div className="experiment-findings">
+          {(feedback.findings || []).map((finding, index) => (
+            <article key={`${finding.area}-${finding.title}-${index}`}>
+              <span>{index + 1}</span>
+              <div><small>{finding.area} · weight {finding.attentionWeight || 3}/5 · {finding.confidence}</small><strong>{finding.title}</strong><blockquote>{finding.evidence}</blockquote><p><b>Action:</b> {finding.action}</p></div>
+            </article>
+          ))}
+        </div>
+        <aside className="experiment-feedback-side">
+          <div className="experiment-verbal"><Volume2 size={17} /><div><strong>Concise coaching feedback</strong><p>{feedback.verbalFeedback}</p></div></div>
+          <div className="experiment-agent-audit"><strong>Individual text-agent outputs</strong>{(feedback.agentOutputs || []).map((agent) => <details key={agent.areaId}><summary><span>{agent.areaName}</span><small>Weight {agent.weight}/5 · {agent.findings?.length || 0} finding(s)</small><ChevronDown size={14} /></summary><div>{agent.findings?.length ? agent.findings.map((finding, index) => <p key={`${finding.title}-${index}`}><b>{finding.title}:</b> {finding.action}</p>) : <p>No supported finding returned.</p>}</div></details>)}</div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
 function HistoryPage({ history }) {
   const [selectedId, setSelectedId] = useState(history[0]?.id || null);
   useEffect(() => {
@@ -1341,6 +1716,71 @@ function calculateReadiness(state) {
     result[area.id] = { level, label: level === 'satisfied' ? 'Satisfied' : level === 'partial' ? 'Partial' : 'Missing', reason };
   });
   return result;
+}
+
+function createExperimentEvaluationState(state, experiment, dataset) {
+  const enabled = Object.fromEntries(ATTENTION_AREAS.map((area) => [
+    area.id,
+    EXPERIMENT_TEXT_AREAS.includes(area.id) && experiment.selectedAreaIds.includes(area.id),
+  ]));
+  return {
+    ...state,
+    session: {
+      slot: dataset.label,
+      title: dataset.title,
+      learner: dataset.learner,
+      taskType: '3MT presentation',
+      audience: dataset.audience,
+      level: dataset.level,
+      interactionMode: 'Monologue',
+    },
+    inputs: {
+      transcript: { name: `${dataset.id}.txt`, size: dataset.transcript.length, type: 'text/plain', updatedAt: Date.now() },
+      task: { name: `${dataset.id}-brief.txt`, size: dataset.taskBrief.length, type: 'text/plain', updatedAt: Date.now() },
+      audio: null,
+      vrTrace: null,
+      transcriptText: dataset.transcript,
+      taskText: `${dataset.taskBrief}\nResearch topic: ${dataset.topic}`,
+      performanceMetrics: null,
+      evidenceAvailability: { transcript: true, task_reference: true, audio: false, vr_trace: false },
+      vrTraceData: null,
+      vrTraceSummary: null,
+    },
+    enabled,
+    attentionWeights: { ...state.attentionWeights, ...experiment.attentionWeights },
+    results: null,
+    readiness: null,
+  };
+}
+
+function createBundledExperimentFeedback(datasets, experimentSetup) {
+  const seedState = {
+    session: {},
+    inputs: {},
+    enabled: {},
+    selectedFocus: DEFAULT_SELECTED_FOCUS,
+    customFocus: DEFAULT_CUSTOM_FOCUS,
+    attentionWeights: DEFAULT_ATTENTION_WEIGHTS,
+    config: DEFAULT_CONFIG,
+  };
+  return Object.fromEntries(datasets.map((dataset) => {
+    const evaluationState = createExperimentEvaluationState(seedState, experimentSetup, dataset);
+    const readiness = calculateReadiness(evaluationState);
+    const results = buildLocalResults(evaluationState, readiness);
+    return [dataset.id, {
+      ...results,
+      completedAt: DEFAULT_EXPERIMENT_COMPLETED_AT,
+      modelNote: 'Bundled text-only Local Mock baseline. Audio and multimodal routes were excluded.',
+      datasetSnapshot: { ...dataset, audio: null },
+      experimentConfig: {
+        name: experimentSetup.name,
+        modelRoute: 'local-mock',
+        selectedAreaIds: [...experimentSetup.selectedAreaIds],
+        attentionWeights: { ...experimentSetup.attentionWeights },
+        audioExcluded: true,
+      },
+    }];
+  }));
 }
 
 function buildLocalResults(state, readiness) {

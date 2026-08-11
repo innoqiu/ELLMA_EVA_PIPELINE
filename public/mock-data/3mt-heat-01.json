@@ -1,0 +1,17 @@
+{
+  "schema_version": "ellma-3mt-mock-1.0",
+  "id": "3mt-heat-01",
+  "label": "Dataset 01",
+  "title": "Heat Has a Postcode",
+  "learner": "Mock learner A",
+  "topic": "Urban heat inequality",
+  "audience": "General public",
+  "level": "B2–C1",
+  "taskBrief": "Explain how street-level temperature mapping reveals unequal heat exposure, why the result matters, and what decision the research could inform.",
+  "designedSignals": [
+    "Repeated ‘I think’ frame",
+    "Strong recommendation language",
+    "Clear result and closing"
+  ],
+  "transcript": "Good afternoon. I think heat is usually described as a city-wide problem. I think this hides an important fact: heat changes from one street to the next. My research combines satellite images with temperature sensors carried by local volunteers. We mapped twelve neighbourhoods during three summer heatwaves. The results show that two streets only five hundred metres apart can differ by six degrees. I think people should understand that this is not simply uncomfortable weather. Older residents and outdoor workers face greater health risks in the hottest streets. I think city planners should use our evidence to place trees, shade and cooling centres where exposure is highest. The map makes invisible inequality visible. Heat has a postcode, and local climate adaptation should begin with the people living in the hottest one."
+}

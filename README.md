@@ -35,6 +35,20 @@ Every completed run is stored in browser local storage, up to the latest 50 runs
 
 This is prototype storage. A production deployment should use authenticated server-side storage, retention controls, and explicit participant consent.
 
+## 3MT experiment workspace
+
+The **3MT Experiments** page contains three editable simulated datasets designed to exercise different feedback patterns:
+
+1. repeated stance framing and strong recommendations;
+2. high clause load and a method-heavy contribution statement;
+3. repeated demonstrative framing and an overgeneralised claim.
+
+Each dataset provides editable context, task brief and transcript fields; downloadable JSON and TXT source files; a JSON/TXT replacement upload; and a separate real-recording upload slot for future testing. Audio attachments are recorded as dataset metadata but are deliberately excluded from the current experiment.
+
+The page ships with one bundled Local Mock baseline feedback record beneath each dataset, so all three results are immediately available for review. The **Configure experiment** panel selects the configured text model or forces Local Mock, enables the four text-only attention agents, and sets their integration weights. Re-running the experiment replaces and persistently displays the corresponding dataset feedback. Grammar, lexical, pragmatic and discourse agents are supported; fluency, pronunciation, prosody and VR/non-verbal agents do not run in this text-only experiment.
+
+The main Config page still retains independent text and multimodal model endpoints so real audio and VR evidence can be introduced in a later study.
+
 ## Inputs
 
 The minimum input is a transcript. Optional audio and VR traces can support pronunciation, prosody, gaze, gesture, body openness, audience orientation, and slide/space interaction. The app includes downloadable JSON templates and validates the normalized package before evaluation.
@@ -69,5 +83,6 @@ src/main.jsx                 Application, state, agents, adjudication, and pages
 src/styles.css               Interface styles
 scripts/prepare-session.mjs  Normalize exported session files for local testing
 public/                      Input templates and static assets
+public/mock-data/            Three downloadable 3MT simulated datasets
 test-data/                   Local session packages (Git-ignored)
 ```
