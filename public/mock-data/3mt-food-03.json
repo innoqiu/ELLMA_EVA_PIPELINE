@@ -7,6 +7,7 @@
   "topic": "Reducing university food waste",
   "audience": "General public",
   "level": "B2–C1",
+  "vrTraceUrl": "/mock-data/3mt-food-03-vr-trace.json",
   "taskBrief": "Explain the intervention and its evidence, avoid overstating what one university trial proves, and make the research contribution accessible to a non-specialist audience.",
   "designedSignals": [
     "Repeated ‘This is’ frame",

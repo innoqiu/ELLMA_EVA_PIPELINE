@@ -7,6 +7,7 @@
   "topic": "Urban heat inequality",
   "audience": "General public",
   "level": "B2–C1",
+  "vrTraceUrl": "/mock-data/3mt-heat-01-vr-trace.json",
   "taskBrief": "Explain how street-level temperature mapping reveals unequal heat exposure, why the result matters, and what decision the research could inform.",
   "designedSignals": [
     "Repeated ‘I think’ frame",

@@ -37,17 +37,32 @@ This is prototype storage. A production deployment should use authenticated serv
 
 ## 3MT experiment workspace
 
-The **3MT Experiments** page contains three editable simulated datasets designed to exercise different feedback patterns:
+The **3MT Experiments** page contains three editable simulated datasets designed to exercise different language and embodied-presentation feedback patterns:
 
 1. repeated stance framing and strong recommendations;
 2. high clause load and a method-heavy contribution statement;
 3. repeated demonstrative framing and an overgeneralised claim.
 
-Each dataset provides editable context, task brief and transcript fields; downloadable JSON and TXT source files; a JSON/TXT replacement upload; and a separate real-recording upload slot for future testing. Audio attachments are recorded as dataset metadata but are deliberately excluded from the current experiment.
+Each dataset provides:
 
-The page ships with one bundled Local Mock baseline feedback record beneath each dataset, so all three results are immediately available for review. The **Configure experiment** panel selects the configured text model or forces Local Mock, enables the four text-only attention agents, and sets their integration weights. Re-running the experiment replaces and persistently displays the corresponding dataset feedback. Grammar, lexical, pragmatic and discourse agents are supported; fluency, pronunciation, prosody and VR/non-verbal agents do not run in this text-only experiment.
+- editable context, task brief and transcript fields;
+- downloadable dataset JSON and transcript TXT files, with a replacement upload;
+- a separate downloadable VR trace containing 37 synchronized samples at five-second intervals across 180 seconds;
+- headset and controller position/rotation, gaze origin/direction/target, audience coordinates and gesture events;
+- a validated VR JSON replacement upload;
+- a real-audio upload for conditional multimodal analysis.
 
-The main Config page still retains independent text and multimodal model endpoints so real audio and VR evidence can be introduced in a later study.
+The page ships with one bundled Local Mock baseline beneath each dataset using both transcript and structured VR evidence. The **Configure experiment** panel controls seven independently weighted agents:
+
+- Grammar, Lexical, Pragmatic and Discourse agents use the transcript;
+- Embodied Communication uses the structured VR JSON through the text-model route—numeric gaze and gesture traces do not require an image/video model;
+- Fluency and Pronunciation use the raw audio through the separate multimodal route.
+
+Audio agents run only when the user uploads a live audio file and the Multimodal configuration contains an API endpoint, key and model. Otherwise no audio request is sent and the result keeps an explicit reserved feedback slot. Browsers do not restore raw file bytes after reload, so a persisted audio attachment must be re-uploaded before another multimodal run.
+
+Every enabled attention area is called independently. The final adjudicator rejects unsupported claims, merges overlap, and applies the 1–5 weights only after evidence and confidence checks. Re-running a dataset replaces and persistently displays its integrated result and its separate transcript, structured-VR and multimodal agent outputs.
+
+The main Config page retains independent text and multimodal model endpoints. The prototype sends audio using an OpenAI-compatible `input_audio` message; providers with a different audio schema will require an adapter.
 
 ## Inputs
 
@@ -83,6 +98,7 @@ src/main.jsx                 Application, state, agents, adjudication, and pages
 src/styles.css               Interface styles
 scripts/prepare-session.mjs  Normalize exported session files for local testing
 public/                      Input templates and static assets
-public/mock-data/            Three downloadable 3MT simulated datasets
+public/mock-data/            3MT transcript datasets and five-second VR traces
+scripts/generate-mock-vr-traces.mjs  Rebuild the three deterministic VR fixtures
 test-data/                   Local session packages (Git-ignored)
 ```

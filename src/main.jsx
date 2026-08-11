@@ -239,6 +239,9 @@ const DEFAULT_CUSTOM_FOCUS = Object.fromEntries(ATTENTION_AREAS.map((area) => [a
 const DEFAULT_ATTENTION_WEIGHTS = Object.fromEntries(ATTENTION_AREAS.map((area) => [area.id, 3]));
 const HISTORY_LIMIT = 50;
 const EXPERIMENT_TEXT_AREAS = ['grammar', 'lexical', 'pragmatic', 'discourse'];
+const EXPERIMENT_STRUCTURED_AREAS = [...EXPERIMENT_TEXT_AREAS, 'embodied'];
+const EXPERIMENT_AUDIO_AREAS = ['fluency', 'pronunciation'];
+const EXPERIMENT_AGENT_AREAS = [...EXPERIMENT_STRUCTURED_AREAS, ...EXPERIMENT_AUDIO_AREAS];
 
 const DEFAULT_EXPERIMENT_DATASETS = [
   {
@@ -254,6 +257,10 @@ const DEFAULT_EXPERIMENT_DATASETS = [
     designedSignals: ['Repeated “I think” frame', 'Strong recommendation language', 'Clear result and closing'],
     downloadUrl: '/mock-data/3mt-heat-01.json',
     transcriptUrl: '/mock-data/3mt-heat-01.txt',
+    vrTraceUrl: '/mock-data/3mt-heat-01-vr-trace.json',
+    vrTrace: createMockVrTrace('3mt-heat-01', 'screen-heavy'),
+    vrTraceSummary: validateVrTrace(createMockVrTrace('3mt-heat-01', 'screen-heavy')).summary,
+    vrTraceFile: null,
     importedFile: null,
     audio: null,
   },
@@ -270,6 +277,10 @@ const DEFAULT_EXPERIMENT_DATASETS = [
     designedSignals: ['High clause load', 'Method-heavy middle section', 'Contribution stated late'],
     downloadUrl: '/mock-data/3mt-ocean-02.json',
     transcriptUrl: '/mock-data/3mt-ocean-02.txt',
+    vrTraceUrl: '/mock-data/3mt-ocean-02-vr-trace.json',
+    vrTrace: createMockVrTrace('3mt-ocean-02', 'fixed-centre'),
+    vrTraceSummary: validateVrTrace(createMockVrTrace('3mt-ocean-02', 'fixed-centre')).summary,
+    vrTraceFile: null,
     importedFile: null,
     audio: null,
   },
@@ -286,17 +297,22 @@ const DEFAULT_EXPERIMENT_DATASETS = [
     designedSignals: ['Repeated “This is” frame', 'Overgeneralised final claim', 'Accessible contribution statement'],
     downloadUrl: '/mock-data/3mt-food-03.json',
     transcriptUrl: '/mock-data/3mt-food-03.txt',
+    vrTraceUrl: '/mock-data/3mt-food-03-vr-trace.json',
+    vrTrace: createMockVrTrace('3mt-food-03', 'balanced-active'),
+    vrTraceSummary: validateVrTrace(createMockVrTrace('3mt-food-03', 'balanced-active')).summary,
+    vrTraceFile: null,
     importedFile: null,
     audio: null,
   },
 ];
 
 const DEFAULT_EXPERIMENT_SETUP = {
+  schemaVersion: 2,
   name: '3MT text-only feedback comparison',
   modelRoute: 'configured-text',
   selectedDatasetIds: DEFAULT_EXPERIMENT_DATASETS.map((dataset) => dataset.id),
-  selectedAreaIds: [...EXPERIMENT_TEXT_AREAS],
-  attentionWeights: { grammar: 3, lexical: 4, pragmatic: 4, discourse: 5 },
+  selectedAreaIds: [...EXPERIMENT_AGENT_AREAS],
+  attentionWeights: { grammar: 3, lexical: 4, pragmatic: 4, discourse: 5, embodied: 4, fluency: 3, pronunciation: 3 },
 };
 const DEFAULT_EXPERIMENT_COMPLETED_AT = '2026-08-11T08:00:00.000Z';
 const DEFAULT_EXPERIMENT = {
@@ -367,12 +383,19 @@ function loadExperiment(storedExperiment) {
     ...(savedDatasets.get(dataset.id) || {}),
     audio: savedDatasets.get(dataset.id)?.audio || null,
   }));
+  const savedAreaIds = Array.isArray(storedExperiment.selectedAreaIds)
+    ? storedExperiment.selectedAreaIds.filter((id) => EXPERIMENT_AGENT_AREAS.includes(id))
+    : DEFAULT_EXPERIMENT.selectedAreaIds;
+  const selectedAreaIds = storedExperiment.schemaVersion === 2
+    ? savedAreaIds
+    : [...new Set([...savedAreaIds, 'embodied', ...EXPERIMENT_AUDIO_AREAS])];
   return {
     ...DEFAULT_EXPERIMENT,
     ...storedExperiment,
     datasets,
     selectedDatasetIds: Array.isArray(storedExperiment.selectedDatasetIds) ? storedExperiment.selectedDatasetIds : DEFAULT_EXPERIMENT.selectedDatasetIds,
-    selectedAreaIds: Array.isArray(storedExperiment.selectedAreaIds) ? storedExperiment.selectedAreaIds.filter((id) => EXPERIMENT_TEXT_AREAS.includes(id)) : DEFAULT_EXPERIMENT.selectedAreaIds,
+    schemaVersion: 2,
+    selectedAreaIds,
     attentionWeights: { ...DEFAULT_EXPERIMENT.attentionWeights, ...storedExperiment.attentionWeights },
     feedbackByDataset: { ...DEFAULT_EXPERIMENT.feedbackByDataset, ...(storedExperiment.feedbackByDataset || {}) },
   };
@@ -547,7 +570,7 @@ function Topbar({ state, setState, page, runEvaluation, running }) {
     input: ['Session input', 'Add the evidence available for this performance.'],
     attention: ['Attention areas', 'Choose what the evaluation should inspect.'],
     feedback: ['Evaluation feedback', 'Prioritized, evidence-linked coaching actions.'],
-    experiments: ['3MT experiment datasets', 'Edit, configure and compare three text-only simulated evaluations.'],
+    experiments: ['3MT experiment datasets', 'Edit and compare transcript, structured VR and optional audio evidence.'],
     history: ['Run history', 'Inspect each attention agent output and the integrated decision.'],
     pipeline: ['How the system works', 'From synchronized evidence to two forms of actionable feedback.'],
     config: ['Model configuration', 'Route text and multimodal evidence to separate model endpoints.'],
@@ -559,7 +582,7 @@ function Topbar({ state, setState, page, runEvaluation, running }) {
         <p>{titles[page][1]}</p>
       </div>
       {page === 'experiments' ? (
-        <div className="experiment-topbar-mode"><Beaker size={16} /><span>Text-only experiment workspace</span></div>
+        <div className="experiment-topbar-mode"><Beaker size={16} /><span>Multi-source experiment workspace</span></div>
       ) : <div className="run-controls">
         <label className="slot-select">
           <span>Run slot</span>
@@ -1094,13 +1117,16 @@ function FeedbackPage({ state, running, runStage, runEvaluation, setPage }) {
 function ExperimentPage({ state, setState, notify }) {
   const [configOpen, setConfigOpen] = useState(false);
   const [runningIds, setRunningIds] = useState([]);
+  const audioFilesRef = useRef(new Map());
   const experiment = state.experiment;
-  const textAreas = ATTENTION_AREAS.filter((area) => EXPERIMENT_TEXT_AREAS.includes(area.id));
+  const structuredAreas = ATTENTION_AREAS.filter((area) => EXPERIMENT_STRUCTURED_AREAS.includes(area.id));
+  const audioAreas = ATTENTION_AREAS.filter((area) => EXPERIMENT_AUDIO_AREAS.includes(area.id));
   const selectedCount = experiment.selectedDatasetIds.length;
   const configuredRoute = experiment.modelRoute === 'configured-text';
   const routeLabel = configuredRoute
     ? `${state.config.text.provider === 'openai' ? 'API' : 'Local Mock'} · ${state.config.text.model}`
     : 'Forced Local Mock';
+  const multimodalReady = isRemoteConfigReady(state.config.multimodal);
 
   const updateExperiment = (patchValue) => setState((current) => ({
     ...current,
@@ -1134,6 +1160,7 @@ function ExperimentPage({ state, setState, notify }) {
   const resetDataset = (datasetId) => {
     const original = DEFAULT_EXPERIMENT_DATASETS.find((dataset) => dataset.id === datasetId);
     if (!original) return;
+    audioFilesRef.current.delete(datasetId);
     setState((current) => ({
       ...current,
       experiment: {
@@ -1142,6 +1169,30 @@ function ExperimentPage({ state, setState, notify }) {
       },
     }));
     notify(`${original.label} restored to the supplied mock data.`, 'info');
+  };
+
+  const importVrTrace = async (datasetId, file) => {
+    if (!file) return;
+    try {
+      const trace = JSON.parse(await file.text());
+      const validation = validateVrTrace(trace);
+      if (!validation.valid) throw new Error(validation.errors[0]);
+      setState((current) => ({
+        ...current,
+        experiment: {
+          ...current.experiment,
+          datasets: current.experiment.datasets.map((dataset) => (dataset.id === datasetId ? {
+            ...dataset,
+            vrTrace: trace,
+            vrTraceSummary: validation.summary,
+            vrTraceFile: { name: file.name, size: file.size, type: file.type || 'application/json' },
+          } : dataset)),
+        },
+      }));
+      notify(`VR trace validated: ${validation.summary.recordCount} synchronized five-second records.`, 'success');
+    } catch (error) {
+      notify(`VR trace import failed: ${error.message}`, 'error');
+    }
   };
 
   const importDataset = async (datasetId, file) => {
@@ -1175,8 +1226,16 @@ function ExperimentPage({ state, setState, notify }) {
 
   const attachAudio = (datasetId, file) => {
     if (!file) return;
+    audioFilesRef.current.set(datasetId, file);
     updateDataset(datasetId, 'audio', { name: file.name, size: file.size, type: file.type || 'audio/*', updatedAt: Date.now() });
-    notify(`${file.name} attached for a future real-audio test; it will not be analysed in this experiment.`, 'info');
+    notify(multimodalReady
+      ? `${file.name} attached. The configured multimodal model will be attempted on the next run.`
+      : `${file.name} attached. Configure the multimodal endpoint before running audio agents.`, multimodalReady ? 'success' : 'info');
+  };
+
+  const removeAudio = (datasetId) => {
+    audioFilesRef.current.delete(datasetId);
+    updateDataset(datasetId, 'audio', null);
   };
 
   const runDatasets = async (datasetIds) => {
@@ -1185,8 +1244,8 @@ function ExperimentPage({ state, setState, notify }) {
       notify('Select at least one dataset before running the experiment.', 'warning');
       return;
     }
-    if (!experiment.selectedAreaIds.length) {
-      notify('Enable at least one text attention agent in Experiment configuration.', 'warning');
+    if (!experiment.selectedAreaIds.some((id) => EXPERIMENT_STRUCTURED_AREAS.includes(id))) {
+      notify('Enable at least one transcript or structured-VR agent in Experiment configuration.', 'warning');
       setConfigOpen(true);
       return;
     }
@@ -1194,25 +1253,25 @@ function ExperimentPage({ state, setState, notify }) {
     for (const datasetId of ids) {
       const dataset = experiment.datasets.find((item) => item.id === datasetId);
       if (!dataset?.transcript.trim()) continue;
-      const evaluationState = createExperimentEvaluationState(state, experiment, dataset);
+      const audioFile = audioFilesRef.current.get(datasetId) || null;
+      const useAudio = Boolean(audioFile && multimodalReady && experiment.selectedAreaIds.some((id) => EXPERIMENT_AUDIO_AREAS.includes(id)));
+      const evaluationState = createExperimentEvaluationState(state, experiment, dataset, useAudio);
       const readiness = calculateReadiness(evaluationState);
       let results;
       let modelNote;
       try {
-        const useRemote = experiment.modelRoute === 'configured-text'
-          && state.config.text.provider === 'openai'
-          && state.config.text.baseUrl.startsWith('http');
-        if (useRemote) {
-          results = await runRemoteEvaluation(evaluationState, readiness);
-          modelNote = `Text-only multi-agent evaluation with ${state.config.text.model}. Audio and multimodal routes were excluded.`;
-        } else {
-          await new Promise((resolve) => setTimeout(resolve, 240));
-          results = buildLocalResults(evaluationState, readiness);
-          modelNote = 'Text-only deterministic mock evaluation. Audio and multimodal routes were excluded.';
-        }
+        results = await runExperimentPipeline(evaluationState, readiness, {
+          forceLocalText: experiment.modelRoute === 'local-mock',
+          audioFile,
+          audioAttachedMetadata: Boolean(dataset.audio),
+          multimodalReady,
+        });
+        modelNote = results.pipelineNote;
       } catch (error) {
         results = buildLocalResults(evaluationState, readiness);
-        modelNote = `Configured text model was unavailable; local text-only evaluator used (${error.message}).`;
+        modelNote = `Configured pipeline was unavailable; local transcript + structured-VR evaluator used (${error.message}).`;
+        results.audioStatus = audioFile ? 'failed' : 'not-uploaded';
+        results.audioStatusMessage = audioFile ? `Multimodal attempt failed: ${error.message}` : 'No real recording uploaded for this run.';
       }
       const completedAt = new Date().toISOString();
       const feedback = {
@@ -1225,7 +1284,8 @@ function ExperimentPage({ state, setState, notify }) {
           modelRoute: experiment.modelRoute,
           selectedAreaIds: [...experiment.selectedAreaIds],
           attentionWeights: { ...experiment.attentionWeights },
-          audioExcluded: true,
+          structuredVrIncluded: true,
+          audioStatus: results.audioStatus,
         },
       };
       setState((current) => ({
@@ -1239,7 +1299,7 @@ function ExperimentPage({ state, setState, notify }) {
       setRunningIds((current) => current.filter((id) => id !== datasetId));
     }
     setRunningIds([]);
-    notify('Selected 3MT datasets now have separate text-only feedback records.', 'success');
+    notify('Selected 3MT datasets now have separate transcript, VR and conditional-audio feedback records.', 'success');
   };
 
   return (
@@ -1248,10 +1308,11 @@ function ExperimentPage({ state, setState, notify }) {
         <div>
           <span className="eyebrow">Controlled mock-data study</span>
           <h2>{experiment.name}</h2>
-          <p>Three editable 3MT cases · text agents only · real audio upload reserved for later validation.</p>
+          <p>Editable transcript + five-second VR traces · optional real audio through the configured multimodal model.</p>
         </div>
         <div className="experiment-hero-actions">
           <div className="experiment-route-chip"><FileText size={15} /><span><small>Evaluation route</small><strong>{routeLabel}</strong></span></div>
+          <div className={`experiment-route-chip multimodal ${multimodalReady ? 'ready' : ''}`}><Headphones size={15} /><span><small>Audio route</small><strong>{multimodalReady ? state.config.multimodal.model : 'Not configured · skipped'}</strong></span></div>
           <button className="secondary-button" onClick={() => setConfigOpen((open) => !open)}><SlidersHorizontal size={16} /> Configure experiment</button>
           <button className="primary-button" onClick={() => runDatasets(experiment.selectedDatasetIds)} disabled={runningIds.length > 0}><Play size={16} /> {runningIds.length ? `Running ${runningIds.length}` : `Run ${selectedCount} datasets`}</button>
         </div>
@@ -1259,7 +1320,7 @@ function ExperimentPage({ state, setState, notify }) {
 
       {configOpen && (
         <section className="experiment-config-panel">
-          <div className="experiment-config-head"><div><span className="eyebrow">Experiment configuration</span><h3>Text-only comparison setup</h3></div><button className="text-button" onClick={() => setConfigOpen(false)}><X size={15} /> Close</button></div>
+          <div className="experiment-config-head"><div><span className="eyebrow">Experiment configuration</span><h3>Multi-agent evidence routing</h3></div><button className="text-button" onClick={() => setConfigOpen(false)}><X size={15} /> Close</button></div>
           <div className="experiment-config-grid">
             <FormField label="Experiment name"><input value={experiment.name} onChange={(event) => updateExperiment({ name: event.target.value })} /></FormField>
             <FormField label="Model route" hint="Multimodal configuration remains available on the Config page.">
@@ -1270,9 +1331,9 @@ function ExperimentPage({ state, setState, notify }) {
             </FormField>
           </div>
           <div className="experiment-agent-config">
-            <div><strong>Enabled text attention agents</strong><span>Only these four transcript-based routes are available in this experiment.</span></div>
+            <div><strong>Transcript + structured VR agents</strong><span>Embodied Communication reads numeric VR JSON through the text route; no image/video model is required.</span></div>
             <div className="experiment-agent-grid">
-              {textAreas.map((area) => {
+              {structuredAreas.map((area) => {
                 const enabled = experiment.selectedAreaIds.includes(area.id);
                 return (
                   <article key={area.id} className={enabled ? 'enabled' : ''}>
@@ -1284,7 +1345,22 @@ function ExperimentPage({ state, setState, notify }) {
               })}
             </div>
           </div>
-          <div className="text-only-rule"><ShieldCheck size={17} /><div><strong>Experiment invariant: no speech or multimodal measurement</strong><span>Uploaded recordings are retained only as dataset attachments. Fluency, pronunciation, prosody, gaze and gesture agents do not run.</span></div></div>
+          <div className="experiment-agent-config audio-agent-config">
+            <div><strong>Conditional audio agents</strong><span>These agents run only when this dataset has a live audio upload and the separate Multimodal endpoint is fully configured.</span></div>
+            <div className="experiment-agent-grid audio-agent-grid">
+              {audioAreas.map((area) => {
+                const enabled = experiment.selectedAreaIds.includes(area.id);
+                return (
+                  <article key={area.id} className={enabled ? 'enabled' : ''}>
+                    <button type="button" className={`switch ${enabled ? 'on' : ''}`} onClick={() => toggleArea(area.id)} role="switch" aria-checked={enabled} aria-label={`${enabled ? 'Disable' : 'Enable'} experiment ${area.name}`}><span /></button>
+                    <div><small>{area.code} · Multimodal</small><strong>{area.name}</strong></div>
+                    <label><span>Weight</span><input type="range" min="1" max="5" value={experiment.attentionWeights[area.id]} onChange={(event) => updateExperimentWeight(area.id, event.target.value)} disabled={!enabled} /><b>{experiment.attentionWeights[area.id]}/5</b></label>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+          <div className="text-only-rule"><ShieldCheck size={17} /><div><strong>Evidence routing rule</strong><span>Transcript and VR JSON go to text agents. Raw audio is sent only to the configured multimodal endpoint; without a complete configuration, audio calls are skipped and the feedback slot explains why.</span></div></div>
         </section>
       )}
 
@@ -1325,12 +1401,20 @@ function ExperimentPage({ state, setState, notify }) {
                   <a className="secondary-button full-width" href={dataset.transcriptUrl} download><FileText size={15} /> Download transcript TXT</a>
                   <label className="secondary-button full-width upload-label"><UploadCloud size={15} /> Upload JSON or transcript<input type="file" accept=".json,.txt,text/plain,application/json" onChange={(event) => importDataset(dataset.id, event.target.files?.[0])} hidden /></label>
                   {dataset.importedFile && <div className="dataset-file-status"><CheckCircle2 size={14} /><span><strong>{dataset.importedFile.name}</strong><small>{formatBytes(dataset.importedFile.size)} imported</small></span></div>}
+                  <div className="vr-file-slot">
+                    <ScanEye size={19} />
+                    <div><strong>Structured VR trace · 5-second samples</strong><span>Headset/controller position and rotation, gaze target, audience coordinates and gesture events.</span></div>
+                    <a href={dataset.vrTraceUrl} download><FileDown size={14} /> Download VR JSON</a>
+                    <label><UploadCloud size={14} /> Replace VR JSON<input type="file" accept=".json,application/json" onChange={(event) => importVrTrace(dataset.id, event.target.files?.[0])} hidden /></label>
+                  </div>
+                  <div className="vr-summary-strip"><span><b>{dataset.vrTraceSummary?.recordCount || 0}</b> records</span><span><b>{Math.round((dataset.vrTraceSummary?.audienceGazeRate || 0) * 100)}%</b> audience gaze</span><span><b>{dataset.vrTraceSummary?.gestureEventCount || 0}</b> gestures</span></div>
+                  {dataset.vrTraceFile && <div className="dataset-file-status"><CheckCircle2 size={14} /><span><strong>{dataset.vrTraceFile.name}</strong><small>{formatBytes(dataset.vrTraceFile.size)} · validated replacement</small></span></div>}
                   <div className="future-audio-slot">
                     <Headphones size={19} />
-                    <div><strong>Real recording · future test</strong><span>Upload is available, but audio is excluded from this experiment.</span></div>
+                    <div><strong>Real recording · multimodal input</strong><span>{multimodalReady ? 'The next run will attempt Fluency and Pronunciation agents.' : 'Endpoint not configured: file can be attached, but no audio request will be sent.'}</span></div>
                     <label><UploadCloud size={14} /> {dataset.audio ? 'Replace' : 'Upload audio'}<input type="file" accept="audio/*" onChange={(event) => attachAudio(dataset.id, event.target.files?.[0])} hidden /></label>
                   </div>
-                  {dataset.audio && <div className="dataset-file-status audio"><FileAudio size={14} /><span><strong>{dataset.audio.name}</strong><small>{formatBytes(dataset.audio.size)} · not analysed</small></span><button onClick={() => updateDataset(dataset.id, 'audio', null)} aria-label={`Remove ${dataset.audio.name}`}><X size={14} /></button></div>}
+                  {dataset.audio && <div className="dataset-file-status audio"><FileAudio size={14} /><span><strong>{dataset.audio.name}</strong><small>{formatBytes(dataset.audio.size)} · {audioFilesRef.current.has(dataset.id) ? (multimodalReady ? 'ready for multimodal call' : 'waiting for configuration') : 're-upload required after reload'}</small></span><button onClick={() => removeAudio(dataset.id)} aria-label={`Remove ${dataset.audio.name}`}><X size={14} /></button></div>}
                   <div className="designed-signals"><span>Designed test signals</span>{dataset.designedSignals.map((signal) => <small key={signal}>{signal}</small>)}</div>
                 </aside>
               </div>
@@ -1348,11 +1432,17 @@ function ExperimentFeedback({ dataset, feedback }) {
   if (!feedback) {
     return <section className="experiment-feedback empty"><ClipboardCheck size={21} /><div><strong>No feedback run saved for {dataset.label}</strong><span>Edit the data or configuration, then run this dataset. Its result will remain here for review.</span></div></section>;
   }
+  const textOutputs = (feedback.agentOutputs || []).filter((agent) => EXPERIMENT_TEXT_AREAS.includes(agent.areaId));
+  const vrOutputs = (feedback.agentOutputs || []).filter((agent) => agent.areaId === 'embodied');
+  const audioOutputs = (feedback.agentOutputs || []).filter((agent) => EXPERIMENT_AUDIO_AREAS.includes(agent.areaId));
+  const vrSummary = feedback.datasetSnapshot?.vrTraceSummary || dataset.vrTraceSummary;
+  const audioStatus = feedback.audioStatus || 'not-uploaded';
   return (
     <section className="experiment-feedback">
-      <header><div><span className="eyebrow">Saved dataset feedback</span><h4>{dataset.label} · integrated text evaluation</h4><p>{new Date(feedback.completedAt).toLocaleString()} · {feedback.modelNote}</p></div><div><span>{feedback.agentOutputs?.length || 0} agents</span><span>{feedback.findings?.length || 0} retained</span><span>{feedback.overallConfidence} confidence</span></div></header>
+      <header><div><span className="eyebrow">Saved dataset feedback</span><h4>{dataset.label} · integrated multi-source evaluation</h4><p>{new Date(feedback.completedAt).toLocaleString()} · {feedback.modelNote}</p></div><div><span>{feedback.agentOutputs?.length || 0} agents</span><span>{feedback.findings?.length || 0} retained</span><span>{feedback.overallConfidence} confidence</span></div></header>
       <div className="experiment-feedback-grid">
         <div className="experiment-findings">
+          <div className="feedback-column-title"><GitMerge size={15} /><div><strong>Weighted integrated feedback</strong><span>Evidence first, agent weight second.</span></div></div>
           {(feedback.findings || []).map((finding, index) => (
             <article key={`${finding.area}-${finding.title}-${index}`}>
               <span>{index + 1}</span>
@@ -1362,10 +1452,30 @@ function ExperimentFeedback({ dataset, feedback }) {
         </div>
         <aside className="experiment-feedback-side">
           <div className="experiment-verbal"><Volume2 size={17} /><div><strong>Concise coaching feedback</strong><p>{feedback.verbalFeedback}</p></div></div>
-          <div className="experiment-agent-audit"><strong>Individual text-agent outputs</strong>{(feedback.agentOutputs || []).map((agent) => <details key={agent.areaId}><summary><span>{agent.areaName}</span><small>Weight {agent.weight}/5 · {agent.findings?.length || 0} finding(s)</small><ChevronDown size={14} /></summary><div>{agent.findings?.length ? agent.findings.map((finding, index) => <p key={`${finding.title}-${index}`}><b>{finding.title}:</b> {finding.action}</p>) : <p>No supported finding returned.</p>}</div></details>)}</div>
+          <AgentAuditList title="Transcript-agent outputs" outputs={textOutputs} />
+          <div className="vr-feedback-slot">
+            <div className="feedback-slot-head"><ScanEye size={17} /><div><strong>Structured VR feedback</strong><span>Numeric JSON · text-model route</span></div><i>Analysed</i></div>
+            {vrSummary && <div className="feedback-metric-row"><span><b>{Math.round(vrSummary.audienceGazeRate * 100)}%</b> audience gaze</span><span><b>{vrSummary.audienceTargets}</b> audience targets</span><span><b>{vrSummary.gestureEventCount}</b> gestures</span></div>}
+            {vrOutputs.length ? <AgentAuditList title="Gaze + gesture agent" outputs={vrOutputs} compact /> : <p className="slot-message">The Embodied agent was disabled for this run.</p>}
+          </div>
+          <div className={`audio-feedback-slot ${audioStatus}`}>
+            <div className="feedback-slot-head"><Headphones size={17} /><div><strong>Multimodal audio feedback</strong><span>Fluency + pronunciation route</span></div><i>{audioStatus === 'analysed' ? 'Analysed' : 'Reserved'}</i></div>
+            {audioStatus === 'analysed' && audioOutputs.length
+              ? <AgentAuditList title="Audio-agent outputs" outputs={audioOutputs} compact />
+              : <p className="slot-message">{feedback.audioStatusMessage || 'Upload a real recording and configure the multimodal endpoint to activate this section.'}</p>}
+          </div>
         </aside>
       </div>
     </section>
+  );
+}
+
+function AgentAuditList({ title, outputs, compact = false }) {
+  return (
+    <div className={`experiment-agent-audit ${compact ? 'compact' : ''}`}>
+      <strong>{title}</strong>
+      {outputs.map((agent) => <details key={agent.areaId}><summary><span>{agent.areaName}</span><small>Weight {agent.weight}/5 · {agent.findings?.length || 0} finding(s)</small><ChevronDown size={14} /></summary><div>{agent.findings?.length ? agent.findings.map((finding, index) => <p key={`${finding.title}-${index}`}><b>{finding.title}:</b> {finding.action}</p>) : <p>No supported finding returned.</p>}</div></details>)}
+    </div>
   );
 }
 
@@ -1633,6 +1743,76 @@ function Toast({ message, type, onClose }) {
   return <div className={`toast ${type}`} role="status"><Icon size={18} /><span>{message}</span><button onClick={onClose}><X size={15} /></button></div>;
 }
 
+function createMockVrTrace(sessionId, profile) {
+  const audience = [
+    { id: 'audience-left', position: [-1.3, 1.45, 3.1] },
+    { id: 'audience-centre', position: [0, 1.45, 3.25] },
+    { id: 'audience-right', position: [1.3, 1.45, 3.1] },
+  ];
+  const screen = { id: 'slide-screen', position: [2.5, 1.75, 2.35] };
+  const normalize = (vector) => {
+    const length = Math.sqrt(vector.reduce((sum, value) => sum + value ** 2, 0)) || 1;
+    return vector.map((value) => Number((value / length).toFixed(3)));
+  };
+  const targetFor = (index) => {
+    if (profile === 'screen-heavy') return index % 4 < 2 ? screen : audience[1];
+    if (profile === 'fixed-centre') return index % 7 === 0 ? screen : audience[1];
+    if (index % 6 === 0) return screen;
+    return audience[(index - 1) % audience.length];
+  };
+  const gestureFor = (index) => {
+    if (!index) return 'presentation_started';
+    if (index === 36) return 'presentation_ended';
+    if (profile === 'screen-heavy') return [11, 25].includes(index) ? 'pointed_at_slide' : null;
+    if (profile === 'fixed-centre') return index % 6 === 0 ? 'open_hand_gesture' : null;
+    return index % 4 === 0 ? 'open_hand_gesture' : index % 9 === 0 ? 'pointed_at_slide' : null;
+  };
+  const records = Array.from({ length: 37 }, (_, index) => {
+    const head = [Number((Math.sin(index / 5) * 0.04).toFixed(3)), 1.66, Number((Math.cos(index / 7) * 0.035).toFixed(3))];
+    const target = targetFor(index);
+    const gesture = gestureFor(index);
+    const gestureScale = gesture ? (profile === 'balanced-active' ? 0.32 : 0.22) : 0.06;
+    const yaw = target.id === 'slide-screen' ? 0.42 : target.id === 'audience-left' ? -0.18 : target.id === 'audience-right' ? 0.18 : 0;
+    return {
+      timestamp_ms: index * 5000,
+      gaze: {
+        source: 'eye_tracking',
+        origin: head,
+        direction: normalize(target.position.map((value, axis) => value - head[axis])),
+        target_id: target.id,
+        target_type: target.id === 'slide-screen' ? 'screen' : 'audience',
+        confidence: Number((0.91 + (index % 5) * 0.015).toFixed(2)),
+      },
+      headset: {
+        position: head,
+        rotation_xyzw: [0, Number(Math.sin(yaw / 2).toFixed(3)), 0, Number(Math.cos(yaw / 2).toFixed(3))],
+      },
+      controllers: {
+        left: {
+          position: [Number((-0.27 - gestureScale * Math.abs(Math.sin(index))).toFixed(3)), Number((1.16 + gestureScale * Math.abs(Math.cos(index / 2))).toFixed(3)), 0.34],
+          rotation_xyzw: [0, -0.08, 0, 0.997],
+          tracked: true,
+        },
+        right: {
+          position: [Number((0.28 + gestureScale * Math.abs(Math.cos(index))).toFixed(3)), Number((1.17 + gestureScale * Math.abs(Math.sin(index / 2))).toFixed(3)), 0.36],
+          rotation_xyzw: [0, 0.08, 0, 0.997],
+          tracked: true,
+        },
+      },
+      audience,
+      events: gesture ? [gesture] : [],
+    };
+  });
+  return {
+    schema_version: 'ellma-vr-trace-1.0',
+    sample_interval_ms: 5000,
+    coordinate_system: { units: 'metres', handedness: 'right-handed', axes: { x: 'right', y: 'up', z: 'forward' }, origin: 'VR scene origin' },
+    session: { session_id: sessionId, learner_id: 'mock-learner', started_at_utc: '2026-08-11T08:00:00Z' },
+    scene_objects: [...audience.map((person) => ({ ...person, type: 'audience' })), { ...screen, type: 'screen' }],
+    records,
+  };
+}
+
 function validateVrTrace(data) {
   const errors = [];
   const isVector3 = (value) => Array.isArray(value) && value.length === 3 && value.every(Number.isFinite);
@@ -1655,6 +1835,9 @@ function validateVrTrace(data) {
   const audienceRecords = data.records.filter((record) => record.gaze.target_type === 'audience' || record.audience.some((person) => person.id === record.gaze.target_id));
   const screenRecords = data.records.filter((record) => record.gaze.target_type === 'screen');
   const audienceTargets = new Set(audienceRecords.map((record) => record.gaze.target_id));
+  const gestureEvents = data.records.flatMap((record) => record.events || []).filter((event) => ['open_hand_gesture', 'pointed_at_slide', 'emphasis_gesture'].includes(event));
+  const slideReferenceEvents = data.records.flatMap((record) => record.events || []).filter((event) => event === 'pointed_at_slide');
+  const trackedControllerSamples = data.records.filter((record) => record.controllers.left.tracked !== false && record.controllers.right.tracked !== false).length;
   let controllerTravelMetres = 0;
   const distance = (from, to) => Math.sqrt(from.reduce((sum, value, axis) => sum + ((value - to[axis]) ** 2), 0));
   for (let index = 1; index < data.records.length; index += 1) {
@@ -1672,6 +1855,10 @@ function validateVrTrace(data) {
       audienceTargets: audienceTargets.size,
       gazeSource: data.records[0].gaze.source,
       controllerTravelMetres: Number(controllerTravelMetres.toFixed(2)),
+      gestureEventCount: gestureEvents.length,
+      gestureRatePerMinute: Number((gestureEvents.length / Math.max(1, data.records[data.records.length - 1].timestamp_ms / 60000)).toFixed(1)),
+      slideReferenceCount: slideReferenceEvents.length,
+      trackedControllerRate: trackedControllerSamples / data.records.length,
     },
   };
 }
@@ -1718,10 +1905,11 @@ function calculateReadiness(state) {
   return result;
 }
 
-function createExperimentEvaluationState(state, experiment, dataset) {
+function createExperimentEvaluationState(state, experiment, dataset, includeAudio = false) {
   const enabled = Object.fromEntries(ATTENTION_AREAS.map((area) => [
     area.id,
-    EXPERIMENT_TEXT_AREAS.includes(area.id) && experiment.selectedAreaIds.includes(area.id),
+    experiment.selectedAreaIds.includes(area.id)
+      && (EXPERIMENT_STRUCTURED_AREAS.includes(area.id) || (includeAudio && EXPERIMENT_AUDIO_AREAS.includes(area.id))),
   ]));
   return {
     ...state,
@@ -1737,14 +1925,14 @@ function createExperimentEvaluationState(state, experiment, dataset) {
     inputs: {
       transcript: { name: `${dataset.id}.txt`, size: dataset.transcript.length, type: 'text/plain', updatedAt: Date.now() },
       task: { name: `${dataset.id}-brief.txt`, size: dataset.taskBrief.length, type: 'text/plain', updatedAt: Date.now() },
-      audio: null,
-      vrTrace: null,
+      audio: includeAudio && dataset.audio ? { ...dataset.audio } : null,
+      vrTrace: { name: `${dataset.id}-vr-trace.json`, size: JSON.stringify(dataset.vrTrace).length, type: 'application/json', updatedAt: Date.now() },
       transcriptText: dataset.transcript,
       taskText: `${dataset.taskBrief}\nResearch topic: ${dataset.topic}`,
       performanceMetrics: null,
-      evidenceAvailability: { transcript: true, task_reference: true, audio: false, vr_trace: false },
-      vrTraceData: null,
-      vrTraceSummary: null,
+      evidenceAvailability: { transcript: true, task_reference: true, audio: includeAudio, vr_trace: true },
+      vrTraceData: dataset.vrTrace,
+      vrTraceSummary: dataset.vrTraceSummary || validateVrTrace(dataset.vrTrace).summary,
     },
     enabled,
     attentionWeights: { ...state.attentionWeights, ...experiment.attentionWeights },
@@ -1770,14 +1958,18 @@ function createBundledExperimentFeedback(datasets, experimentSetup) {
     return [dataset.id, {
       ...results,
       completedAt: DEFAULT_EXPERIMENT_COMPLETED_AT,
-      modelNote: 'Bundled text-only Local Mock baseline. Audio and multimodal routes were excluded.',
+      modelNote: 'Bundled Local Mock baseline using transcript and five-second structured VR data.',
+      pipelineNote: 'Bundled Local Mock baseline using transcript and five-second structured VR data.',
+      audioStatus: 'not-uploaded',
+      audioStatusMessage: 'No real recording was uploaded for this baseline. This feedback position is reserved for the multimodal model.',
       datasetSnapshot: { ...dataset, audio: null },
       experimentConfig: {
         name: experimentSetup.name,
         modelRoute: 'local-mock',
         selectedAreaIds: [...experimentSetup.selectedAreaIds],
         attentionWeights: { ...experimentSetup.attentionWeights },
-        audioExcluded: true,
+        structuredVrIncluded: true,
+        audioStatus: 'not-uploaded',
       },
     }];
   }));
@@ -1909,41 +2101,170 @@ function createHistoryEntry(state, readiness, completedResults) {
   };
 }
 
+function isRemoteConfigReady(config) {
+  return Boolean(config?.provider === 'openai' && config.baseUrl?.startsWith('http') && config.apiKey && config.model);
+}
+
+function buildAttentionAgentMessages(area, state, readiness, evidenceRoute) {
+  const focus = getEnabledFocusItems(state, area).map(({ title, description }) => ({ title, description }));
+  const evidencePackage = {
+    attention_area: { id: area.id, name: area.name, active_focus: focus },
+    evidence_route: evidenceRoute,
+    readiness: readiness[area.id],
+    scenario: state.session,
+    task_reference: state.inputs.taskText || null,
+    transcript: state.inputs.transcriptText.slice(0, 16000),
+    performance_metrics: state.inputs.performanceMetrics || null,
+    evidence_availability: state.inputs.evidenceAvailability || null,
+    structured_vr: area.id === 'embodied' ? {
+      summary: state.inputs.vrTraceSummary,
+      schema: state.inputs.vrTraceData?.schema_version,
+      sample_interval_ms: state.inputs.vrTraceData?.sample_interval_ms,
+      records: state.inputs.vrTraceData?.records,
+    } : null,
+    audio_metadata_only: EXPERIMENT_AUDIO_AREAS.includes(area.id) ? state.inputs.audio : null,
+  };
+  return [
+    {
+      role: 'system',
+      content: `ROLE: You are one independent ${area.name} language-coaching attention agent.\nSCOPE: Inspect only the supplied active focuses for this area.\nEVIDENCE POLICY: Every finding must cite an exact transcript quote, a timestamped structured-VR observation, or an explicit evidence limitation. Do not infer sound from transcript or file metadata. Structured coordinates, gaze targets and gesture events are valid numeric evidence and do not require a multimodal model.\nACTIONABILITY: Explain the local pattern, why it matters in this 3MT context, and one concrete change the learner can rehearse.\nOUTPUT: Return only JSON: {"findings":[{"area":"...","title":"...","evidence":"...","why":"...","action":"...","confidence":"High|Medium|Low","priority":"high|medium|low"}]}. Return at most two findings.`,
+    },
+    { role: 'user', content: `EVIDENCE_PACKAGE\n${JSON.stringify(evidencePackage)}` },
+  ];
+}
+
+function buildAdjudicatorMessages(state, readiness, agentOutputs) {
+  const weightProfile = agentOutputs.map(({ areaId, areaName, weight, evidenceRoute }) => ({ areaId, areaName, weight, evidenceRoute }));
+  return [
+    {
+      role: 'system',
+      content: 'ROLE: You are the final evidence adjudicator and feedback planner. GATE 1: reject unsupported claims and respect readiness. GATE 2: merge duplicates across transcript, structured VR and audio agents. GATE 3: only among supported findings, use the 1–5 weights to decide retention and ordering. Never let weight rescue weak evidence. Preserve the evidence route so tutors can distinguish language, VR and audio observations.',
+    },
+    {
+      role: 'user',
+      content: `Return only JSON with findings (maximum five; area,title,evidence,why,action,confidence High|Medium|Low,priority high|medium|low), verbalFeedback (under 90 words; no more than two actions; exclude Low confidence), coverage, overallConfidence, and nextRun {title,instruction,success}.\nCONTEXT\n${JSON.stringify(state.session)}\nREADINESS\n${JSON.stringify(readiness)}\nWEIGHT_PROFILE\n${JSON.stringify(weightProfile)}\nINDEPENDENT_AGENT_OUTPUTS\n${JSON.stringify(agentOutputs)}`,
+    },
+  ];
+}
+
+async function evaluatePromptAgent(area, state, readiness, config, evidenceRoute) {
+  const output = await callRemoteJson(config, buildAttentionAgentMessages(area, state, readiness, evidenceRoute));
+  return {
+    areaId: area.id,
+    areaName: area.name,
+    weight: state.attentionWeights[area.id] || 3,
+    readiness: readiness[area.id],
+    evidenceRoute,
+    mode: 'llm-agent',
+    findings: Array.isArray(output.findings) ? output.findings : [],
+    rawOutput: output,
+  };
+}
+
+async function fileToBase64(file) {
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+  }
+  return btoa(binary);
+}
+
+function audioFormat(file) {
+  const extension = file.name.split('.').pop()?.toLowerCase();
+  if (['wav', 'mp3', 'm4a', 'ogg', 'webm'].includes(extension)) return extension;
+  if (file.type === 'audio/mpeg') return 'mp3';
+  return 'wav';
+}
+
+async function evaluateAudioAgent(area, state, readiness, config, audioFile) {
+  const base64Audio = await fileToBase64(audioFile);
+  const focus = getEnabledFocusItems(state, area).map(({ title, description }) => ({ title, description }));
+  const audioPrompt = `ROLE: Independent ${area.name} agent. Analyse the supplied recording only for the active focuses.\nACTIVE_FOCUS: ${JSON.stringify(focus)}\nSCENARIO: ${JSON.stringify(state.session)}\nTRANSCRIPT_REFERENCE: ${state.inputs.transcriptText.slice(0, 12000)}\nEVIDENCE POLICY: Acoustic claims must come from the audio, not transcript spelling. Cite a timestamp or short audible segment. If the audio is unusable, return an evidence-limitation finding with Low confidence.\nACTIONABILITY: Give one specific, rehearseable change.\nOUTPUT: Return only JSON {"findings":[{"area":"${area.name}","title":"...","evidence":"...","why":"...","action":"...","confidence":"High|Medium|Low","priority":"high|medium|low"}]}, maximum two findings.`;
+  const output = await callRemoteJson(config, [
+    { role: 'system', content: `You are a conservative spoken-language ${area.name} evaluator. Do not score other dimensions.` },
+    { role: 'user', content: [{ type: 'text', text: audioPrompt }, { type: 'input_audio', input_audio: { data: base64Audio, format: audioFormat(audioFile) } }] },
+  ]);
+  return {
+    areaId: area.id,
+    areaName: area.name,
+    weight: state.attentionWeights[area.id] || 3,
+    readiness: readiness[area.id],
+    evidenceRoute: 'multimodal-audio',
+    mode: 'multimodal-llm-agent',
+    findings: Array.isArray(output.findings) ? output.findings : [],
+    rawOutput: output,
+  };
+}
+
+async function adjudicateAgentOutputs(state, readiness, agentOutputs, config) {
+  const integrated = await callRemoteJson(config, buildAdjudicatorMessages(state, readiness, agentOutputs));
+  const metadataByArea = new Map(agentOutputs.map((output) => [output.areaName.toLowerCase(), output]));
+  const findings = (integrated.findings || []).map((finding) => {
+    const metadata = metadataByArea.get(String(finding.area || '').toLowerCase());
+    return { ...finding, attentionWeight: metadata?.weight || 3, evidenceRoute: metadata?.evidenceRoute || 'unknown' };
+  });
+  return { ...integrated, findings, agentOutputs };
+}
+
+async function runExperimentPipeline(state, readiness, { forceLocalText, audioFile, audioAttachedMetadata, multimodalReady }) {
+  const textReady = !forceLocalText && isRemoteConfigReady(state.config.text);
+  const structuredAreas = ATTENTION_AREAS.filter((area) => isAreaRunnable(state, area) && EXPERIMENT_STRUCTURED_AREAS.includes(area.id));
+  const localBase = buildLocalResults(state, readiness);
+  const structuredOutputs = textReady
+    ? await Promise.all(structuredAreas.map((area) => evaluatePromptAgent(area, state, readiness, state.config.text, area.id === 'embodied' ? 'structured-vr-json' : 'transcript')))
+    : localBase.agentOutputs.filter((output) => EXPERIMENT_STRUCTURED_AREAS.includes(output.areaId)).map((output) => ({ ...output, evidenceRoute: output.areaId === 'embodied' ? 'structured-vr-json' : 'transcript' }));
+
+  let audioOutputs = [];
+  let audioStatus = 'not-uploaded';
+  let audioStatusMessage = 'No real recording uploaded for this run. The multimodal feedback position remains reserved.';
+  if (!audioFile && audioAttachedMetadata) {
+    audioStatus = 'file-unavailable';
+    audioStatusMessage = 'Audio metadata was restored after reload, but browsers do not retain the raw file. Re-upload the recording before running multimodal agents.';
+  } else if (audioFile && !multimodalReady) {
+    audioStatus = 'not-configured';
+    audioStatusMessage = 'A recording is attached, but the multimodal endpoint is incomplete; no audio request was sent.';
+  } else if (audioFile && multimodalReady) {
+    const audioAreas = ATTENTION_AREAS.filter((area) => isAreaRunnable(state, area) && EXPERIMENT_AUDIO_AREAS.includes(area.id));
+    if (!audioAreas.length) {
+      audioStatus = 'disabled';
+      audioStatusMessage = 'A recording is attached, but Fluency and Pronunciation agents are disabled.';
+    } else {
+      try {
+        audioOutputs = await Promise.all(audioAreas.map((area) => evaluateAudioAgent(area, state, readiness, state.config.multimodal, audioFile)));
+        audioStatus = 'analysed';
+        audioStatusMessage = `${audioOutputs.length} multimodal audio agents returned evidence.`;
+      } catch (error) {
+        audioStatus = 'failed';
+        audioStatusMessage = `The multimodal endpoint was called but did not return usable feedback: ${error.message}`;
+      }
+    }
+  }
+
+  const agentOutputs = [...structuredOutputs, ...audioOutputs];
+  let integrated = localBase;
+  if (textReady || audioOutputs.length) {
+    const adjudicatorConfig = textReady ? state.config.text : state.config.multimodal;
+    integrated = await adjudicateAgentOutputs(state, readiness, agentOutputs, adjudicatorConfig);
+  } else {
+    integrated = { ...localBase, agentOutputs };
+  }
+  const textRoute = textReady ? `configured text model ${state.config.text.model}` : 'Local Mock transcript + VR agents';
+  const audioRoute = audioStatus === 'analysed' ? `multimodal model ${state.config.multimodal.model}` : `audio ${audioStatus}`;
+  return { ...integrated, agentOutputs, audioStatus, audioStatusMessage, pipelineNote: `${textRoute}; ${audioRoute}.` };
+}
+
 async function runRemoteEvaluation(state, readiness) {
   const enabledAreas = ATTENTION_AREAS.filter((area) => isAreaRunnable(state, area));
-  const agentOutputs = await Promise.all(enabledAreas.map(async (area) => {
-    const focus = getEnabledFocusItems(state, area).map(({ title, description }) => ({ title, description }));
-    const multimodalArea = ['fluency', 'pronunciation', 'embodied'].includes(area.id);
-    const preferredConfig = multimodalArea && state.config.multimodal.provider === 'openai' ? state.config.multimodal : state.config.text;
-    const vrEvidence = area.id === 'embodied' && state.inputs.vrTraceData ? `\nValidated VR trace:\n${JSON.stringify(state.inputs.vrTraceData).slice(0, 16000)}` : '';
-    const audioEvidence = ['fluency', 'pronunciation'].includes(area.id) && state.inputs.audio ? `\nAudio file available: ${state.inputs.audio.name}. Raw audio transport depends on the configured multimodal provider.` : '';
-    const prompt = `You are the ${area.name} attention agent. Inspect only this language-learning area. Do not score other areas and do not infer audio, video, or interaction evidence that is absent. Return JSON with a findings array containing at most two items. Each item must have area,title,evidence (exact short quote, timestamped VR observation, or evidence limitation),why,action,confidence (High|Medium|Low),priority (high|medium|low).\nReadiness: ${JSON.stringify(readiness[area.id])}\nFocus: ${JSON.stringify(focus)}\nContext: ${JSON.stringify(state.session)}\nTask reference: ${JSON.stringify(state.inputs.taskText || null)}\nStored performance metrics: ${JSON.stringify(state.inputs.performanceMetrics || null)}\nEvidence availability: ${JSON.stringify(state.inputs.evidenceAvailability || null)}\nTranscript:\n${state.inputs.transcriptText.slice(0, 16000)}${vrEvidence}${audioEvidence}`;
-    const output = await callRemoteJson(preferredConfig, [
-      { role: 'system', content: 'Extract evidence for one attention area. Be conservative, specific and actionable.' },
-      { role: 'user', content: prompt },
-    ]);
-    return {
-      areaId: area.id,
-      areaName: area.name,
-      weight: state.attentionWeights[area.id] || 3,
-      readiness: readiness[area.id],
-      mode: 'llm-agent',
-      findings: Array.isArray(output.findings) ? output.findings : [],
-      rawOutput: output,
-    };
+  const agentOutputs = await Promise.all(enabledAreas.map((area) => {
+    const isAudioArea = EXPERIMENT_AUDIO_AREAS.includes(area.id);
+    const preferredConfig = isAudioArea && isRemoteConfigReady(state.config.multimodal) ? state.config.multimodal : state.config.text;
+    const route = area.id === 'embodied' ? 'structured-vr-json' : isAudioArea ? 'audio-metadata-only' : 'transcript';
+    return evaluatePromptAgent(area, state, readiness, preferredConfig, route);
   }));
-  const weightProfile = agentOutputs.map(({ areaId, areaName, weight }) => ({ areaId, areaName, weight }));
-  const prompt = `You are the adjudicator and feedback planner. Merge overlapping agent findings, reject claims unsupported by the stated readiness, and prioritize no more than four useful coaching actions. Use attention weights from 1 (lowest) to 5 (highest) only after evidence quality and confidence have been checked. When two supported findings overlap or compete for limited output space, retain more findings from the higher-weight area. Never use weight to rescue unsupported or Low-confidence claims. Return only JSON with: findings (area,title,evidence,why,action,confidence High|Medium|Low,priority high|medium|low), verbalFeedback (under 90 words and no more than two actions; omit Low-confidence items), coverage, overallConfidence, nextRun {title,instruction,success}.\nContext: ${JSON.stringify(state.session)}\nReadiness: ${JSON.stringify(readiness)}\nAttention weights: ${JSON.stringify(weightProfile)}\nAgent findings: ${JSON.stringify(agentOutputs)}`;
-  const integrated = await callRemoteJson(state.config.text, [
-    { role: 'system', content: 'Merge evidence rigorously. Apply attention weights only as an evidence-safe retention and ranking preference.' },
-    { role: 'user', content: prompt },
-  ]);
-  const weightByArea = new Map(agentOutputs.map((output) => [output.areaName.toLowerCase(), output.weight]));
-  const findings = (integrated.findings || []).map((finding) => ({
-    ...finding,
-    attentionWeight: weightByArea.get(String(finding.area || '').toLowerCase()) || 3,
-  }));
-  return { ...integrated, findings, agentOutputs };
+  return adjudicateAgentOutputs(state, readiness, agentOutputs, state.config.text);
 }
 
 async function callRemoteJson(config, messages) {
