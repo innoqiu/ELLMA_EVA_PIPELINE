@@ -1,74 +1,95 @@
 # ELLMA Evaluation Pipeline
 
-An evidence-first, modular multi-agent prototype for language-performance evaluation in 3MT and VR presentation scenarios.
+## Server deployment
 
-## Pipeline
+Coolify / Docker deployment on the existing `main` branch is documented in [DEPLOYMENT.md](DEPLOYMENT.md). Production includes password-protected access, server-side model credentials and persistent evaluation state and student audio. The current UI also includes Students, Focused Feedback and JSON-driven 3D / abstract VR replay. Use a persistent volume at `/app/data`.
 
-1. **Capture** — import a transcript, optional task reference, audio, and time-aligned VR trace.
-2. **Normalize** — validate the files and create one evidence package with shared timestamps.
-3. **Attention agents** — run each enabled attention area independently. Every area has editable focuses, an evidence-readiness gate, and an integration weight from 1 to 5.
-4. **Weighted adjudication** — merge duplicates and conflicts, preserve traceable evidence, and prioritize supported findings. Confidence and evidence quality are applied before weight; a high weight cannot rescue an unsupported claim.
-5. **Outputs and history** — produce a detailed tutor report, a concise verbal coaching script, and an auditable run record containing every individual agent output plus the integrated result.
+An evidence-first multi-agent prototype for course-aligned language coaching in 3MT and VR presentation scenarios.
 
-Remote API mode is a true multi-agent pipeline: enabled attention areas are evaluated through independent model calls and a separate adjudicator call performs integration. Local Mock mode is a deterministic simulation for UI and pipeline testing; it does not make multiple LLM calls.
+## Current interface
 
-## Attention configuration
+The application has four pages:
 
-The built-in attention areas cover grammar and syntax, lexical resource, discourse and coherence, fluency, pronunciation and prosody, interaction, task/register fit, and VR/non-verbal presentation behavior. Users can:
+- **Input** — the complete executable workflow, from evidence setup to final feedback.
+- **Prompts** — editable, versioned system instructions for every course, attention, integration, timestamp, and direct-speech agent. JSON output contracts remain fixed.
+- **Config** — independent OpenAI-compatible text and multimodal API settings.
+- **History** — persistent, auditable records of completed runs.
 
-- enable or disable a complete attention area;
-- enable or disable individual focuses;
-- add a custom focus with a title and explanation;
-- assign an integration weight from 1 (low emphasis) to 5 (high emphasis).
+The Input page replaces the earlier separate Input, Attention, Experiment, Feedback, and Pipeline pages. It is a five-stage vertical flow. The active stage and active agents are highlighted while running. A breathing outline means that stage is waiting for a remote provider response.
 
-The default weight is 3. Weight changes retention and ranking only when candidate findings have adequate evidence and confidence.
+Use the **Evaluation slot** selector in the top-right corner to switch between Test dataset 1, Test dataset 2, and Real data. Each slot keeps an independent draft and result state. Both test slots include a downloadable, replaceable five-second dummy VR trace by default.
 
-## History
+## Five-stage executable workflow
 
-Every completed run is stored in browser local storage, up to the latest 50 runs. The History page exposes:
+### 1. Evidence and session setup
 
-- session and provider metadata;
-- attention weights and evidence readiness;
-- each attention agent's findings and raw structured output;
-- integrated findings and verbal feedback;
-- whether the run used the multi-agent API or Local Mock simulation.
+Choose either of the two prefilled 3MT datasets or a blank dataset. The stage contains session context, a single document uploader, optional audio and VR JSON uploaders, and editable 1–5 base weights. The document uploader accepts PDF, TXT, Markdown, and JSON. Each extracted document can be labelled as syllabus/ILO, rubric, task brief, or transcript. Selectable PDF text is extracted locally from every page in the browser; image-only/scanned PDFs require OCR first. The two test slots use a full-text fixture extracted from the seven-page PLED5001 syllabus.
 
-This is prototype storage. A production deployment should use authenticated server-side storage, retention controls, and explicit participant consent.
+### 2. Course Alignment Layer
 
-## 3MT experiment workspace
+The optional layer has two model calls:
 
-The **3MT Experiments** page contains three editable simulated datasets designed to exercise different language and embodied-presentation feedback patterns:
+1. **Course Alignment Agent 1** extracts document-supported course requirements, selects ILOs relevant to the current task, and produces concise, observable guidelines.
+2. **Course Alignment Agent 2** routes each guideline to exactly one best-fit existing attention agent and focus. It assigns a bounded run-specific boost: `+1` for primary relevance, `+0.5` for supporting relevance, or `+0`.
 
-1. repeated stance framing and strong recommendations;
-2. high clause load and a method-heavy contribution statement;
-3. repeated demonstrative framing and an overgeneralised claim.
+The effective weight is:
 
-Each dataset provides:
+```text
+effective agent weight = min(5, base weight + highest assigned ILO boost)
+```
 
-- editable context, task brief and transcript fields;
-- downloadable dataset JSON and transcript TXT files, with a replacement upload;
-- a separate downloadable VR trace containing 37 synchronized samples at five-second intervals across 180 seconds;
-- headset and controller position/rotation, gaze origin/direction/target, audience coordinates and gesture events;
-- a validated VR JSON replacement upload;
-- a real-audio upload for conditional multimodal analysis.
+Boosts do not accumulate when several guidelines point to the same agent. Before evaluation, the tutor can edit, add, delete, and reroute guidelines; change base weights and boosts; inspect both course agents' raw responses; and approve the result. An approved Course Alignment profile is frozen and reused while its course documents, task context, and course-agent prompts remain unchanged; regeneration is an explicit action.
 
-The page ships with one bundled Local Mock baseline beneath each dataset using both transcript and structured VR evidence. The **Configure experiment** panel controls seven independently weighted agents:
+When **Require tutor approval** is enabled, Stage 3 is locked until approval. Approving the guidelines automatically starts all downstream agents; there is no separate Run Agents action. When approval is disabled, completed routing is auto-approved and immediately continues. When Course Alignment itself is disabled, both course agents are skipped and evaluation starts from universal base weights. Run controls and slot switching are disabled while a pipeline is active.
 
-- Grammar, Lexical, Pragmatic and Discourse agents use the transcript;
-- Embodied Communication uses the structured VR JSON through the text-model route—numeric gaze and gesture traces do not require an image/video model;
-- Fluency and Pronunciation use the raw audio through the separate multimodal route.
+### 3. Parallel attention agents
 
-Audio agents run only when the user uploads a live audio file and the Multimodal configuration contains an API endpoint, key and model. Otherwise no audio request is sent and the result keeps an explicit reserved feedback slot. Browsers do not restore raw file bytes after reload, so a persisted audio attachment must be re-uploaded before another multimodal run.
+The agents run independently. Each prompt contains only that agent's language focuses, valid evidence, specifically routed course guidelines, and effective weight. Every enabled focus receives an explicit audit status before findings are written. Supported improvements include exact evidence, occurrence count, diagnosis, task impact, two revision options, a rehearsal action, and a success criterion. Individual raw responses are folded into the corresponding agent section.
 
-Every enabled attention area is called independently. The final adjudicator rejects unsupported claims, merges overlap, and applies the 1–5 weights only after evidence and confidence checks. Re-running a dataset replaces and persistently displays its integrated result and its separate transcript, structured-VR and multimodal agent outputs.
+### 4. Integration and direct routes
 
-The main Config page retains independent text and multimodal model endpoints. The prototype sends audio using an OpenAI-compatible `input_audio` message; providers with a different audio schema will require an adapter.
+The system preserves three chains:
 
-## Inputs
+1. **Text chain** — Grammar, Lexical, Pragmatic, and Discourse agents inspect the official transcript. Local integration verifies transcript evidence, creates stable finding IDs, deduplicates only exact matches, clusters different dimensions that cite the same sentence, and applies a fixed ranking formula. All supported findings are preserved; weight affects ordering rather than retention. The Integration model writes the readable verbal layer but cannot add, remove, merge, or rerank findings. The complete candidate ledger and deterministic decision reasons are preserved; only the default summary view is limited to five improvements.
+2. **Aligned VR chain** — Qwen returns timestamp anchors; local alignment keeps the official transcript authoritative and joins it to five-second VR samples. The Embodied agent evaluates the aligned transcript/VR timeline.
+3. **Direct speech chain** — a second Qwen request evaluates Fluency & Timing and Pronunciation & Prosody from audio.
 
-The minimum input is a transcript. Optional audio and VR traces can support pronunciation, prosody, gaze, gesture, body openness, audience orientation, and slide/space interaction. The app includes downloadable JSON templates and validates the normalized package before evaluation.
+Only Chain 1 enters Integration. VR and speech findings remain separate. Integration decisions and raw responses are folded into the relevant stage.
 
-Session-derived test data is intentionally ignored by Git and should not be published without the participant's consent.
+### 5. Final feedback
+
+The final stage separates improvement priorities from evidence-supported strengths. Tutor feedback includes revisions, rehearsal steps, and success criteria; learner-facing verbal feedback remains concise. Earlier stages remain visible, so the Input page also serves as the live pipeline explanation and audit view.
+
+## API routes
+
+- **Text model** — Course Alignment Agents 1–2, transcript agents, aligned VR text agent, and text-only Integration.
+- **Multimodal model** — timestamped audio transcription and direct spoken-language evaluation.
+
+The prototype supports deterministic Local Mock mode and OpenAI-compatible endpoints. Alibaba Bailian can use `qwen3.5-omni-plus`. A live audio file is sent only when the multimodal endpoint, key, and model are configured. The raw browser `File` is retained per slot while the application remains open, including navigation between Input and Config; after a full browser reload, the recording must be selected again because only safe metadata is persisted.
+
+Browser-side API keys are suitable only for local prototyping. Production Unity or web deployments should call a secured server endpoint and keep provider keys server-side.
+
+## Evidence and VR schema
+
+The minimum evidence is an official transcript. Optional inputs include course/task/rubric documents, audio, and structured VR traces. The VR template uses synchronized five-second samples containing gaze, headset/controller coordinates, audience coordinates, and events.
+
+The official transcript remains authoritative. Qwen timestamps are alignment anchors, not a replacement transcript.
+
+## Persistence and auditability
+
+Application state and the latest 50 completed runs are stored in browser local storage. Each History record contains:
+
+- session, provider route, and evidence readiness;
+- selected ILOs and approved guidelines;
+- guideline routing and base/boost/effective weights;
+- both Course Alignment raw responses;
+- every evaluation agent's parsed and provider responses;
+- all integrated findings and Integration decisions;
+- aligned VR and direct speech results;
+- concise learner-facing feedback.
+- evaluation signature, transcript/course/prompt hashes, enabled focuses, sampling parameters, runtime, token usage, and provider-reported cost when available.
+
+History records can be printed through the browser's native print dialog. Production use requires authenticated server storage, retention controls, and participant consent.
 
 ## Run locally
 
@@ -79,26 +100,19 @@ npm install
 npm run dev
 ```
 
-Open the URL printed by Vite, normally `http://127.0.0.1:5173`.
-
-Build the production bundle with:
+Open `http://127.0.0.1:4314/` in this workspace. Build with:
 
 ```bash
 npm run build
 ```
 
-## API configuration
-
-The Config page has separate routes for text analysis and multimodal analysis. Use an OpenAI-compatible endpoint, model name, and API key, or choose Local Mock. Browser-side API keys are suitable only for this prototype; production calls should pass through a secure backend.
-
 ## Repository structure
 
 ```text
-src/main.jsx                 Application, state, agents, adjudication, and pages
-src/styles.css               Interface styles
-scripts/prepare-session.mjs  Normalize exported session files for local testing
-public/                      Input templates and static assets
-public/mock-data/            3MT transcript datasets and five-second VR traces
-scripts/generate-mock-vr-traces.mjs  Rebuild the three deterministic VR fixtures
-test-data/                   Local session packages (Git-ignored)
+src/main.jsx                   State, Course Alignment agents, evaluation chains, and pages
+src/styles.css                 Workflow and report interface styles
+public/vr-trace-template.json  Five-second VR input template
+public/mock-data/              Prefilled 3MT transcripts and VR traces
+scripts/prepare-session.mjs    Normalize exported Unity session files
+scripts/generate-mock-vr-traces.mjs  Rebuild deterministic VR fixtures
 ```

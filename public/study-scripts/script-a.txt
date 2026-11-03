@@ -1,0 +1,17 @@
+Heat Has a Postcode
+
+Imagine walking home on a summer afternoon. On one street, trees shade the pavement. Around the corner, the road is bare, the walls hold the heat, and there is nowhere to rest. The weather forecast gives both streets the same temperature. Your body tells a different story.
+
+My research asks a simple question: how can we find the places where heat becomes hardest to escape?
+
+Most temperature reports describe a whole city. But people experience heat one street at a time. This matters especially for older residents, outdoor workers, and people who cannot afford to cool their homes. A city average can hide the conditions they face every day.
+
+To investigate this, we worked with local volunteers in twelve neighbourhoods. During three summer heatwaves, they carried small temperature sensors along the same walking routes. We combined those measurements with satellite images showing trees, buildings, and paved surfaces. This allowed us to compare the temperature people actually experienced with the appearance of each street.
+
+Here is what we found. Two streets only five hundred metres apart could differ by six degrees. The hottest routes often had little shade and long stretches of exposed pavement. However, adding trees everywhere is not a simple answer. Some streets have narrow footpaths or underground pipes, and trees take time to grow.
+
+Our contribution is a street-level map that connects heat measurements with practical cooling options. It can help planners identify where a shaded bus stop, a drinking fountain, or a sheltered walking route might make the greatest difference. Instead of asking only where the city is hottest, we can ask where people have the fewest ways to protect themselves.
+
+These findings come from one city and three heatwaves. We still need to test the approach in other climates and seasons. The map also cannot tell us everything about how safe or comfortable a person feels. For that, we need residents' experiences alongside the sensor data.
+
+Heat has a postcode, but protection should not depend on your address. By measuring the streets people use, we can make cooling decisions that respond to everyday life.

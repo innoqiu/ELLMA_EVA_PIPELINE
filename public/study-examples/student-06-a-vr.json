@@ -1,0 +1,3999 @@
+{
+  "schema_version": "ellma-vr-trace-1.0",
+  "sample_interval_ms": 5000,
+  "duration_ms": 215779,
+  "simulation": {
+    "is_simulated": true,
+    "seed": 11,
+    "description": "Synthetic demonstration only. Motion is not inferred from the recording. Time zero matches audio start; final sampled pose is held until audio end."
+  },
+  "coordinate_system": {
+    "units": "metres",
+    "handedness": "right-handed",
+    "axes": {
+      "x": "right",
+      "y": "up",
+      "z": "forward"
+    },
+    "origin": "VR scene origin"
+  },
+  "session": {
+    "session_id": "student-06-a",
+    "learner_id": "student-06",
+    "audio_duration_ms": 215779
+  },
+  "scene_objects": [
+    {
+      "id": "audience-left",
+      "position": [
+        -1.3,
+        1.45,
+        3.1
+      ],
+      "type": "audience"
+    },
+    {
+      "id": "audience-centre",
+      "position": [
+        0,
+        1.45,
+        3.25
+      ],
+      "type": "audience"
+    },
+    {
+      "id": "audience-right",
+      "position": [
+        1.3,
+        1.45,
+        3.1
+      ],
+      "type": "audience"
+    },
+    {
+      "id": "slide-screen",
+      "position": [
+        2.5,
+        1.75,
+        2.35
+      ],
+      "type": "screen"
+    }
+  ],
+  "records": [
+    {
+      "timestamp_ms": 0,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.05,
+          1.684,
+          0.0001
+        ],
+        "direction": [
+          0.3983,
+          -0.069,
+          0.9146
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.05,
+          1.684,
+          0.0001
+        ],
+        "rotation_xyzw": [
+          0,
+          0.2039,
+          0,
+          0.979
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.295,
+            1.12,
+            0.3175
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2788,
+            1.1362,
+            0.3095
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "presentation_started"
+      ]
+    },
+    {
+      "timestamp_ms": 5000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0484,
+          1.684,
+          0.0051
+        ],
+        "direction": [
+          0.3985,
+          -0.0691,
+          0.9146
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0484,
+          1.684,
+          0.0051
+        ],
+        "rotation_xyzw": [
+          0,
+          0.204,
+          0,
+          0.979
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2867,
+            1.1244,
+            0.3161
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2647,
+            1.1527,
+            0.303
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 10000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0438,
+          1.684,
+          0.0099
+        ],
+        "direction": [
+          -0.3757,
+          -0.07,
+          0.9241
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0438,
+          1.684,
+          0.0099
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1919,
+          0,
+          0.9814
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2658,
+            1.1362,
+            0.3122
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2859,
+            1.1697,
+            0.296
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 15000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0364,
+          1.684,
+          0.0145
+        ],
+        "direction": [
+          -0.378,
+          -0.07,
+          0.9231
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0364,
+          1.684,
+          0.0145
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1931,
+          0,
+          0.9812
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2778,
+            1.1527,
+            0.3063
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.295,
+            1.1831,
+            0.2897
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 20000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0268,
+          1.684,
+          0.0187
+        ],
+        "direction": [
+          0.0083,
+          -0.0722,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0268,
+          1.684,
+          0.0187
+        ],
+        "rotation_xyzw": [
+          0,
+          0.0041,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.5365,
+            1.5361,
+            0.2957
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.491,
+            1.7032,
+            0.1745
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 25000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0156,
+          1.684,
+          0.0223
+        ],
+        "direction": [
+          0.0048,
+          -0.0723,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0156,
+          1.684,
+          0.0223
+        ],
+        "rotation_xyzw": [
+          0,
+          0.0024,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2927,
+            1.1831,
+            0.2927
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2672,
+            1.1877,
+            0.2827
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 30000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0033,
+          1.684,
+          0.0253
+        ],
+        "direction": [
+          0.3893,
+          -0.0699,
+          0.9185
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0033,
+          1.684,
+          0.0253
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1991,
+          0,
+          0.98
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.277,
+            1.1897,
+            0.2871
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2765,
+            1.1778,
+            0.2831
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 35000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0091,
+          1.684,
+          0.0276
+        ],
+        "direction": [
+          0.3864,
+          -0.07,
+          0.9197
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0091,
+          1.684,
+          0.0276
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1976,
+          0,
+          0.9803
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2667,
+            1.1877,
+            0.2835
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2925,
+            1.1622,
+            0.2862
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 40000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.021,
+          1.684,
+          0.0292
+        ],
+        "direction": [
+          -0.3942,
+          -0.0698,
+          0.9164
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.021,
+          1.684,
+          0.0292
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.2017,
+          0,
+          0.9794
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2872,
+            1.1778,
+            0.2825
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2932,
+            1.1449,
+            0.2914
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 45000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0316,
+          1.684,
+          0.0299
+        ],
+        "direction": [
+          0.7285,
+          0.0195,
+          0.6847
+        ],
+        "target_id": "slide-screen",
+        "target_type": "screen",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0316,
+          1.684,
+          0.0299
+        ],
+        "rotation_xyzw": [
+          0,
+          0.3969,
+          0,
+          0.9178
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.5529,
+            1.4735,
+            0.1686
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.413,
+            1.2044,
+            0.2836
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 50000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0402,
+          1.684,
+          0.0298
+        ],
+        "direction": [
+          -0.0124,
+          -0.0725,
+          0.9973
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0402,
+          1.684,
+          0.0298
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0062,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2863,
+            1.1449,
+            0.2886
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2652,
+            1.1214,
+            0.305
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 55000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0463,
+          1.684,
+          0.0289
+        ],
+        "direction": [
+          -0.0143,
+          -0.0724,
+          0.9973
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0463,
+          1.684,
+          0.0289
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0072,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2652,
+            1.1301,
+            0.2946
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2863,
+            1.1209,
+            0.3111
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 60000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0495,
+          1.684,
+          0.0272
+        ],
+        "direction": [
+          0.376,
+          -0.0704,
+          0.9239
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0495,
+          1.684,
+          0.0272
+        ],
+        "rotation_xyzw": [
+          0,
+          0.192,
+          0,
+          0.9814
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2783,
+            1.1214,
+            0.3015
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.295,
+            1.1287,
+            0.3155
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 65000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0497,
+          1.684,
+          0.0248
+        ],
+        "direction": [
+          0.3757,
+          -0.0703,
+          0.9241
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0497,
+          1.684,
+          0.0248
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1919,
+          0,
+          0.9814
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2932,
+            1.1209,
+            0.3082
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2872,
+            1.143,
+            0.3174
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 70000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0467,
+          1.684,
+          0.0216
+        ],
+        "direction": [
+          -0.3998,
+          -0.0695,
+          0.914
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0467,
+          1.684,
+          0.0216
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.2047,
+          0,
+          0.9788
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.5321,
+            1.193,
+            0.4136
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.3157,
+            1.4569,
+            0.4392
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 75000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0409,
+          1.684,
+          0.0178
+        ],
+        "direction": [
+          -0.398,
+          -0.0694,
+          0.9148
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0409,
+          1.684,
+          0.0178
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.2037,
+          0,
+          0.979
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2765,
+            1.143,
+            0.3168
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2771,
+            1.1762,
+            0.3132
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 80000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0325,
+          1.684,
+          0.0136
+        ],
+        "direction": [
+          -0.01,
+          -0.0721,
+          0.9973
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0325,
+          1.684,
+          0.0136
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.005,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2673,
+            1.1602,
+            0.3174
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2927,
+            1.187,
+            0.3077
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 85000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0221,
+          1.684,
+          0.009
+        ],
+        "direction": [
+          -0.0068,
+          -0.072,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0221,
+          1.684,
+          0.009
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0034,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2876,
+            1.1762,
+            0.3152
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.293,
+            1.1899,
+            0.3009
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 90000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0103,
+          1.684,
+          0.0041
+        ],
+        "direction": [
+          0.3836,
+          -0.0696,
+          0.9209
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0103,
+          1.684,
+          0.0041
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1961,
+          0,
+          0.9806
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.295,
+            1.187,
+            0.3106
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2778,
+            1.1843,
+            0.2941
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 95000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0021,
+          1.684,
+          -0.0009
+        ],
+        "direction": [
+          0.7286,
+          0.0192,
+          0.6846
+        ],
+        "target_id": "slide-screen",
+        "target_type": "screen",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0021,
+          1.684,
+          -0.0009
+        ],
+        "rotation_xyzw": [
+          0,
+          0.397,
+          0,
+          0.9178
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.4768,
+            1.7051,
+            0.3368
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.3088,
+            1.5512,
+            0.2006
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 100000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0144,
+          1.684,
+          -0.0058
+        ],
+        "direction": [
+          -0.3815,
+          -0.0694,
+          0.9217
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0144,
+          1.684,
+          -0.0058
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.195,
+          0,
+          0.9808
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2646,
+            1.1843,
+            0.2975
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2867,
+            1.1547,
+            0.2841
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 105000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0258,
+          1.684,
+          -0.0106
+        ],
+        "direction": [
+          -0.3781,
+          -0.0694,
+          0.9231
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0258,
+          1.684,
+          -0.0106
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1932,
+          0,
+          0.9812
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2788,
+            1.1715,
+            0.2909
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.295,
+            1.1379,
+            0.2825
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 110000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0356,
+          1.684,
+          -0.0152
+        ],
+        "direction": [
+          0.0109,
+          -0.0715,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0356,
+          1.684,
+          -0.0152
+        ],
+        "rotation_xyzw": [
+          0,
+          0.0055,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2934,
+            1.1547,
+            0.2858
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2868,
+            1.1254,
+            0.2837
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 115000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0432,
+          1.684,
+          -0.0192
+        ],
+        "direction": [
+          0.0132,
+          -0.0714,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0432,
+          1.684,
+          -0.0192
+        ],
+        "rotation_xyzw": [
+          0,
+          0.0066,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2923,
+            1.1379,
+            0.2829
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2661,
+            1.1201,
+            0.2875
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 120000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0481,
+          1.684,
+          -0.0228
+        ],
+        "direction": [
+          0.3954,
+          -0.0686,
+          0.9159
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0481,
+          1.684,
+          -0.0228
+        ],
+        "rotation_xyzw": [
+          0,
+          0.2024,
+          0,
+          0.9793
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.3938,
+            1.1651,
+            0.1557
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.407,
+            1.1477,
+            0.2435
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 125000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.05,
+          1.684,
+          -0.0257
+        ],
+        "direction": [
+          0.3956,
+          -0.0686,
+          0.9159
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.05,
+          1.684,
+          -0.0257
+        ],
+        "rotation_xyzw": [
+          0,
+          0.2024,
+          0,
+          0.9793
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2678,
+            1.1201,
+            0.2853
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2929,
+            1.1343,
+            0.3001
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 130000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0488,
+          1.684,
+          -0.0279
+        ],
+        "direction": [
+          -0.3705,
+          -0.0693,
+          0.9262
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0488,
+          1.684,
+          -0.0279
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1891,
+          0,
+          0.982
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.288,
+            1.1233,
+            0.2902
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2928,
+            1.1504,
+            0.3069
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 135000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0446,
+          1.684,
+          -0.0294
+        ],
+        "direction": [
+          -0.3714,
+          -0.0692,
+          0.9259
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0446,
+          1.684,
+          -0.0294
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1896,
+          0,
+          0.9819
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2949,
+            1.1343,
+            0.2966
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2773,
+            1.1676,
+            0.3126
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 140000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0375,
+          1.684,
+          -0.03
+        ],
+        "direction": [
+          0.0114,
+          -0.0712,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0375,
+          1.684,
+          -0.03
+        ],
+        "rotation_xyzw": [
+          0,
+          0.0057,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2855,
+            1.1504,
+            0.3036
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2664,
+            1.1817,
+            0.3163
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 145000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0282,
+          1.684,
+          -0.0298
+        ],
+        "direction": [
+          0.728,
+          0.019,
+          0.6853
+        ],
+        "target_id": "slide-screen",
+        "target_type": "screen",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0282,
+          1.684,
+          -0.0298
+        ],
+        "rotation_xyzw": [
+          0,
+          0.3966,
+          0,
+          0.918
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2939,
+            1.5182,
+            0.3833
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.4866,
+            1.7,
+            0.4464
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 150000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.0171,
+          1.684,
+          -0.0287
+        ],
+        "direction": [
+          0.3871,
+          -0.0688,
+          0.9195
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.0171,
+          1.684,
+          -0.0287
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1979,
+          0,
+          0.9802
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2793,
+            1.1817,
+            0.3148
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.295,
+            1.1885,
+            0.3159
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 155000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          -0.005,
+          1.684,
+          -0.0269
+        ],
+        "direction": [
+          0.3842,
+          -0.0689,
+          0.9207
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          -0.005,
+          1.684,
+          -0.0269
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1964,
+          0,
+          0.9805
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2936,
+            1.1893,
+            0.3173
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2865,
+            1.1795,
+            0.3118
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 160000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0075,
+          1.684,
+          -0.0243
+        ],
+        "direction": [
+          -0.3851,
+          -0.0689,
+          0.9203
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0075,
+          1.684,
+          -0.0243
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1969,
+          0,
+          0.9804
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2921,
+            1.1885,
+            0.317
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2655,
+            1.1645,
+            0.3058
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 165000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0195,
+          1.684,
+          -0.0211
+        ],
+        "direction": [
+          -0.3885,
+          -0.0689,
+          0.9189
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0195,
+          1.684,
+          -0.0211
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.1987,
+          0,
+          0.9801
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2755,
+            1.1795,
+            0.3141
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2781,
+            1.1472,
+            0.2989
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 170000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0303,
+          1.684,
+          -0.0172
+        ],
+        "direction": [
+          -0.0092,
+          -0.0714,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0303,
+          1.684,
+          -0.0172
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0046,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.3304,
+            1.4924,
+            0.375
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.5373,
+            1.2186,
+            0.2346
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 175000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0392,
+          1.684,
+          -0.0129
+        ],
+        "direction": [
+          -0.012,
+          -0.0715,
+          0.9974
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0392,
+          1.684,
+          -0.0129
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.006,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2883,
+            1.1472,
+            0.3024
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2926,
+            1.1221,
+            0.2867
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 180000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0456,
+          1.684,
+          -0.0083
+        ],
+        "direction": [
+          0.3733,
+          -0.0696,
+          0.9251
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0456,
+          1.684,
+          -0.0083
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1906,
+          0,
+          0.9817
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2949,
+            1.1318,
+            0.2955
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2768,
+            1.1204,
+            0.2833
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 185000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0493,
+          1.684,
+          -0.0034
+        ],
+        "direction": [
+          0.3729,
+          -0.0698,
+          0.9253
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0493,
+          1.684,
+          -0.0034
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1904,
+          0,
+          0.9817
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2851,
+            1.1221,
+            0.2892
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.267,
+            1.1272,
+            0.2826
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 190000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0498,
+          1.684,
+          0.0016
+        ],
+        "direction": [
+          -0.3984,
+          -0.0691,
+          0.9146
+        ],
+        "target_id": "audience-left",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0498,
+          1.684,
+          0.0016
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.204,
+          0,
+          0.979
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2635,
+            1.1204,
+            0.2847
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2874,
+            1.1409,
+            0.2846
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 195000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0473,
+          1.684,
+          0.0066
+        ],
+        "direction": [
+          0.7229,
+          0.0195,
+          0.6907
+        ],
+        "target_id": "slide-screen",
+        "target_type": "screen",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0473,
+          1.684,
+          0.0066
+        ],
+        "rotation_xyzw": [
+          0,
+          0.3932,
+          0,
+          0.9195
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.4257,
+            1.1806,
+            0.1544
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.5529,
+            1.4376,
+            0.208
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": [
+        "open_hand_gesture"
+      ]
+    },
+    {
+      "timestamp_ms": 200000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0418,
+          1.684,
+          0.0113
+        ],
+        "direction": [
+          -0.0129,
+          -0.0721,
+          0.9973
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0418,
+          1.684,
+          0.0113
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0065,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2937,
+            1.1409,
+            0.2832
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2861,
+            1.1743,
+            0.2952
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 205000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0338,
+          1.684,
+          0.0158
+        ],
+        "direction": [
+          -0.0104,
+          -0.0722,
+          0.9973
+        ],
+        "target_id": "audience-centre",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0338,
+          1.684,
+          0.0158
+        ],
+        "rotation_xyzw": [
+          0,
+          -0.0052,
+          0,
+          1
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2918,
+            1.1579,
+            0.2865
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2649,
+            1.1859,
+            0.3021
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 210000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0236,
+          1.684,
+          0.0198
+        ],
+        "direction": [
+          0.3819,
+          -0.07,
+          0.9216
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0236,
+          1.684,
+          0.0198
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1952,
+          0,
+          0.9808
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.2749,
+            1.1743,
+            0.2919
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2786,
+            1.19,
+            0.3087
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    },
+    {
+      "timestamp_ms": 215000,
+      "gaze": {
+        "source": "head_direction_proxy",
+        "origin": [
+          0.0119,
+          1.684,
+          0.0233
+        ],
+        "direction": [
+          0.3852,
+          -0.07,
+          0.9202
+        ],
+        "target_id": "audience-right",
+        "target_type": "audience",
+        "confidence": 1
+      },
+      "headset": {
+        "position": [
+          0.0119,
+          1.684,
+          0.0233
+        ],
+        "rotation_xyzw": [
+          0,
+          0.1969,
+          0,
+          0.9804
+        ]
+      },
+      "controllers": {
+        "left": {
+          "position": [
+            -0.269,
+            1.1859,
+            0.2986
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        },
+        "right": {
+          "position": [
+            0.2933,
+            1.1855,
+            0.3139
+          ],
+          "rotation_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "tracked": true
+        }
+      },
+      "audience": [
+        {
+          "id": "audience-left",
+          "position": [
+            -1.3,
+            1.45,
+            3.1
+          ]
+        },
+        {
+          "id": "audience-centre",
+          "position": [
+            0,
+            1.45,
+            3.25
+          ]
+        },
+        {
+          "id": "audience-right",
+          "position": [
+            1.3,
+            1.45,
+            3.1
+          ]
+        }
+      ],
+      "events": []
+    }
+  ]
+}

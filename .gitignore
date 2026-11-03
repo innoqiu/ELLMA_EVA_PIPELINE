@@ -5,3 +5,7 @@ test-data/
 .env.*
 !.env.example
 *.log
+.runtime/
+tmp/
+output/
+/data/

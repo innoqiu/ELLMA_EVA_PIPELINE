@@ -1,0 +1,23 @@
+.study-home,.student-workspace {color:#23364c;max-width:1280px;margin:auto}
+.study-home h2 {font-size:30px;margin:12px 0}.study-home p,.student-workspace p{line-height:1.6}
+.study-materials {padding:22px 26px;background:#f1f5fa;border:1px solid #dce5ee;border-radius:12px;margin:24px 0}
+.study-materials div {display:flex;flex-wrap:wrap;gap:14px}.study-materials a {padding:12px 16px;background:white;border:1px solid #cbd9e6;border-radius:8px;color:#25558a;text-decoration:none;font-weight:600}
+.student-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:28px 0}
+.student-grid>button{text-align:left;background:white;border:1px solid #d5e0eb;border-radius:12px;padding:24px;cursor:pointer;color:#23364c}.student-grid>button:hover{border-color:#3971ae;background:#f8fbff}.student-grid>button>span{display:block;color:#53779a;font-size:24px}.student-grid h3{font-size:20px;margin:14px 0 8px}
+.student-heading{display:flex;gap:20px;align-items:center;margin-bottom:24px}.student-heading span{color:#587087}
+.study-timeline{display:flex;align-items:flex-start;overflow-x:auto;padding:14px 0 8px;margin:0;gap:0}
+.timeline-point{position:relative;flex:0 0 150px;display:flex;align-items:center;flex-direction:column;gap:14px;padding:0 12px 14px;background:transparent;border:0;color:#62748a;cursor:pointer}
+.timeline-point:before{content:'';position:absolute;left:0;right:0;top:9px;height:2px;background:#dce5ef}
+.timeline-point:first-child:before{left:50%}
+.timeline-point i{position:relative;z-index:1;display:block;width:20px;height:20px;border:4px solid white;border-radius:50%;background:#b6c5d6;box-shadow:0 0 0 1px #d7e0eb}
+.timeline-point b{font-size:14px;line-height:1.4;max-width:126px;overflow-wrap:anywhere;font-weight:500}
+.timeline-point[aria-current]{color:#1859b6}.timeline-point[aria-current] b{font-weight:700}.timeline-point[aria-current] i{background:#2466ce;box-shadow:0 0 0 4px #e8f0fd}
+.timeline-add{display:flex;align-items:center;gap:7px;white-space:nowrap;margin:-6px 0 0 18px;padding:8px 13px;border:1px solid #ccdaeb;background:#f4f8fd;color:#335b88;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer}
+.timeline-add:hover{background:#e8f0fc;border-color:#8eaed4}
+.test-name-row{display:flex;justify-content:flex-end;margin:0 0 22px;padding-bottom:12px;border-bottom:1px solid #e2e8f0}
+.test-rename-button{display:flex;align-items:center;gap:7px;border:0;background:transparent;color:#61768e;font-size:12px;cursor:pointer;padding:6px}
+.test-editor,.test-rename{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.test-editor{padding:20px;background:#f6f9fd;border:1px solid #dde6f1;border-radius:10px;margin:12px 0 16px}.test-editor label{display:grid;gap:8px;font-size:13px}.test-editor input,.test-editor select,.test-rename input{border:1px solid #cbd7e5;border-radius:6px;padding:10px;color:#23364c;background:white;font:inherit}.test-rename>button[type=button]{align-self:center;border:0;background:transparent;color:#62748a;cursor:pointer}
+.student-body{display:grid;grid-template-columns:170px minmax(0,1fr);gap:22px}.student-tabs{display:flex;flex-direction:column;gap:8px;align-self:start;position:sticky;top:110px}.student-tabs button{border:0;border-radius:7px;padding:14px;text-align:left;background:#f2f5f9;color:#405c77;cursor:pointer}.student-tabs button[aria-pressed=true]{background:#e7f0ff;color:#1956a4;font-weight:bold}.student-view{min-width:0}.student-view .history-layout{grid-template-columns:1fr}.student-view .history-run-list{max-height:170px;overflow:auto}.student-view .workflow-stage-body{padding:18px}.student-view .workflow-source-grid{grid-template-columns:1fr}
+.student-view .history-list-panel{position:static}
+@media(max-width:1000px){.student-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-body{grid-template-columns:1fr}.student-tabs{position:static;flex-direction:row;flex-wrap:wrap}.student-heading{flex-wrap:wrap}}
+.study-example-assets{padding:18px 22px;margin-bottom:24px;background:#f5f8fc;border:1px solid #dce4ee;border-radius:12px;line-height:1.65;color:#263c55}.study-example-assets p{margin:10px 0}.study-example-assets small{color:#526175}.study-example-assets a{color:#1956a4}

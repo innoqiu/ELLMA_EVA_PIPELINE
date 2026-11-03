@@ -1,0 +1,43 @@
+.focused-page { max-width: 1080px; margin: 0 auto; color: #203247; }
+.focused-toolbar { display:flex; align-items:end; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+.focused-toolbar label { flex:1; min-width:220px; }
+.focused-page label { display:grid; gap:8px; font-size:14px; font-weight:600; }
+.focused-page select { width:100%; min-width:0; padding:12px; border:1px solid #cbd6df; border-radius:8px; background:white; color:#203247; font:inherit; }
+.focused-report { max-width:850px; margin:auto; }
+.focused-intro { padding:16px 0 24px; }
+.focused-intro h2 { font-size:32px; line-height:1.25; margin:12px 0; }
+.focused-report p,.focused-report blockquote,.focused-report li { font-size:16px; line-height:1.7; overflow-wrap:anywhere; }
+.focused-report summary { cursor:pointer; font-size:15px; font-weight:600; padding:14px 0; }
+.focused-source { border-block:1px solid #d6e0e7; margin-bottom:24px; }
+.focused-strength { padding:24px 28px; background:#edf6f0; border-left:4px solid #488567; margin:24px 0; border-radius:4px; }
+.focused-strength > span { font-size:13px; font-weight:700; color:#315e47; text-transform:uppercase; letter-spacing:.08em; }
+.focused-strength > p { margin:8px 0 0; font-weight:600; }
+.focused-section { background:#fff; border:1px solid #d7e0e8; border-radius:12px; padding:32px; margin:24px 0; }
+.focused-section > header { display:flex; gap:18px; align-items:center; margin-bottom:26px; }
+.focused-number { font-size:24px; color:#58718b; font-weight:500; }
+.focused-section h3 { font-size:22px; margin:4px 0; }
+.focused-section h4 { font-size:21px; line-height:1.45; margin:0 0 20px; color:#182e45; }
+.focused-section h5 { font-size:15px; margin:20px 0 4px; }
+.focused-evidence { border-left:3px solid #bdcbd9; padding-left:18px; margin:20px 0; }
+.focused-evidence > span { font-size:13px; color:#526a80; font-weight:600; }
+.focused-report blockquote { margin:8px 0; color:#415970; }
+.focused-action { background:#f0f5fa; padding:20px 24px; border-radius:8px; margin:24px 0 12px; }
+.focused-action strong { color:#284f72; font-size:14px; }
+.focused-action p { margin:6px 0 0; }
+.focused-tutor { border-top:1px solid #e0e7ee; margin-top:12px; color:#4c6175; }
+.focused-tutor p,.focused-note { font-size:14px !important; }
+.focused-tutor button { margin-top:12px; }
+.focused-empty { padding:12px 0; }
+@media screen and (max-width:700px) {
+  body:has(.focused-page) { min-width:0; }
+  body:has(.focused-page) .app-shell { display:block; }
+  body:has(.focused-page) .sidebar { position:relative; width:100%; height:auto; padding:12px; border-bottom:1px solid #d7e0e8; }
+  body:has(.focused-page) .sidebar-foot { display:none; }
+  body:has(.focused-page) .main-nav { display:flex; flex-wrap:wrap; gap:4px; }
+  body:has(.focused-page) .nav-item { width:auto; }
+  body:has(.focused-page) .topbar { position:static; padding:18px; height:auto; display:block; }
+  body:has(.focused-page) .topbar-actions { display:none; }
+  body:has(.focused-page) .page-frame { padding:18px 14px; }
+}
+@media(max-width:700px) { .focused-section { padding:22px 18px; } .focused-intro h2 { font-size:26px; } .focused-toolbar { align-items:stretch; } .focused-toolbar label { flex-basis:100%; } .focused-action { padding:16px; } }
+@media print { .focused-report { max-width:none; color:#182e45; } .focused-section { box-shadow:none; border-radius:0; padding:18px; break-inside:avoid; } .focused-section > header,.focused-section h4 { break-after:avoid; } .focused-report p,.focused-report li,.focused-report blockquote { font-size:11pt; line-height:1.5; } .focused-strength { break-inside:avoid; } }
