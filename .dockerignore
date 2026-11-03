@@ -8,3 +8,5 @@ output
 test-data
 screenshots
 data
+!src/data
+!src/data/**
