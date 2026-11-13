@@ -8,8 +8,8 @@ Single private tutor workspace. All authenticated users share the same students 
 2. Choose **Dockerfile**, base directory `/`, Dockerfile `/Dockerfile`.
 3. Expose container port **3000**; attach your domain and enable HTTPS through Coolify.
 4. Add persistent storage at **/app/data**. Prefer a named Docker volume. For a host bind mount, grant UID/GID 1000 write access to that directory only.
-5. Add runtime environment variables from `.env.example`. Set a unique `ADMIN_USER` and `ADMIN_PASSWORD` (16+ characters). Configure both TEXT_* and MULTIMODAL_* groups with actual provider URLs, model names and keys. Do not commit keys. URLs should end at the OpenAI-compatible `/v1`, not `/chat/completions`.
-6. Deploy. Browser HTTP Basic authentication protects the UI, recordings and APIs. Health endpoint: `/healthz`. Do not expose port 3000 directly to the public internet; use the HTTPS proxy.
+5. Add runtime environment variables from `.env.example`. Configure both TEXT_* and MULTIMODAL_* groups with actual provider URLs, model names and keys. Do not commit keys. URLs should end at the OpenAI-compatible `/v1`, not `/chat/completions`.
+6. Deploy. Enter `admin_fear` on the entry page; no password is required. ADMIN_USER and ADMIN_PASSWORD are unused and can be removed from Coolify. This is a convenience gate, not identity protection: anyone who knows the username can access recordings and use the configured model quota. Sessions reset on server restart. Health endpoint: `/healthz`. Use the HTTPS proxy.
 
 Model settings in Config are read-only in production; change them in Coolify and redeploy. Keys are attached to provider requests only on the server. Missing models are explicitly shown as unconfigured; the prototype's local mock fallback still exists, so configure models before collecting real evaluations.
 
@@ -27,6 +27,6 @@ Back up the entire data volume daily to separate storage; the previous-version f
 
 ## Local production smoke test
 
-Run `npm ci`, `npm run build`, set ADMIN_USER / ADMIN_PASSWORD and DATA_DIR to a private local directory, then `node server.mjs`. Open port 3000. Development (`npm run dev`) retains the original browser-only storage and direct-provider configuration.
+Run `npm ci`, `npm run build`, set DATA_DIR to a private local directory, then `node server.mjs`. Open port 3000 and enter `admin_fear`. Development (`npm run dev`) retains the original browser-only storage and direct-provider configuration.
 
 The server supports audio byte ranges, authenticated media downloads, JSON uploads, bounded request bodies, upstream timeouts and limited concurrent model requests. No evaluations run automatically on startup.

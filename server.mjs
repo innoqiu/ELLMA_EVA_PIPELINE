@@ -2,15 +2,14 @@ import http from 'node:http';
 import {readFile,writeFile,mkdir,rename,copyFile,stat} from 'node:fs/promises';
 import {createReadStream} from 'node:fs';
 import {resolve,extname,sep} from 'node:path';
-import {timingSafeEqual} from 'node:crypto';
+import {randomBytes} from 'node:crypto';
 
 const port=Number(process.env.PORT||3000),root=resolve('dist'),data=resolve(process.env.DATA_DIR||'data');
-if(!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length<16)throw Error('Set ADMIN_PASSWORD to at least 16 characters.');
 await mkdir(resolve(data,'audio'),{recursive:true});
 const statePath=resolve(data,'state.json');
 let revision=0,state=null;
 try {const saved=JSON.parse(await readFile(statePath,'utf8'));state=saved.state;revision=saved.revision;}catch(e){if(e.code!=='ENOENT')throw Error('Saved state cannot be read. Restore state.json from backup before starting.');}
-const credentials=Buffer.from(`${process.env.ADMIN_USER||'admin'}:${process.env.ADMIN_PASSWORD}`);
+const entryToken=randomBytes(32).toString('hex');
 const configs=Object.fromEntries(['text','multimodal'].map(kind=>{const prefix=kind.toUpperCase();return [kind,{url:process.env[`${prefix}_BASE_URL`],key:process.env[`${prefix}_API_KEY`],model:process.env[`${prefix}_MODEL`]}];}));
 const json=(res,code,value)=>{res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(value));};
 async function body(req,max=32*1024*1024){const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>max)throw Object.assign(Error('Request too large'),{status:413});chunks.push(chunk);}return Buffer.concat(chunks);}
@@ -21,8 +20,16 @@ const server=http.createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://localhost');
   if(url.pathname==='/healthz'){json(res,200,{ok:true});return;}
-  const input=Buffer.from((req.headers.authorization||'').replace(/^Basic /,''),'base64');
-  if(!req.headers.authorization?.startsWith('Basic ')||input.length!==credentials.length||!timingSafeEqual(input,credentials)){res.writeHead(401,{'WWW-Authenticate':'Basic realm="ELLMA", charset="UTF-8"','Cache-Control':'no-store'});res.end('Authentication required');return;}
+  if(url.pathname==='/api/login' && req.method==='POST'){
+    if(req.headers['x-ellma-client']!=='1'){json(res,403,{error:'Invalid request'});return;}
+    const value=JSON.parse((await body(req,1024)).toString());
+    if(value.username!=='admin_fear'){json(res,401,{error:'Incorrect username'});return;}
+    res.setHeader('Set-Cookie',`ellma_entry=${entryToken}; HttpOnly; SameSite=Strict; Path=/${req.headers['x-forwarded-proto']==='https'?'; Secure':''}`);json(res,200,{ok:true});return;
+  }
+  if(!(req.headers.cookie||'').split(';').some(c=>c.trim()===`ellma_entry=${entryToken}`)){
+    if(req.method==='GET' && (url.pathname==='/'||url.pathname==='/index.html')){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end(await readFile('login.html'));return;}
+    json(res,401,{error:'Enter your username on the home page.'});return;
+  }
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('X-Frame-Options','DENY');res.setHeader('Referrer-Policy','same-origin');
   if(!['GET','HEAD'].includes(req.method) && req.headers['x-ellma-client']!=='1'){json(res,403,{error:'Invalid client request'});return;}
   if(url.pathname==='/api/bootstrap'){json(res,200,{state,revision,config:Object.fromEntries(Object.entries(configs).map(([kind,c])=>[kind,c.url&&c.key&&c.model?{provider:'openai',baseUrl:`/api/model/${kind}`,apiKey:'server-managed',model:c.model,serverManaged:true}:{provider:'mock',baseUrl:'mock://local',apiKey:'',model:'Not configured',serverManaged:true}]))});return;}
